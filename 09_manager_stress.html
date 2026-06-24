@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Hoshin — 社員の状態分析</title>
+<style>:root{--ink:#1e1c18;--ink-2:#4a4740;--ink-3:#8a877e;--bg:#f4f2ed;--surface:#fff;--border:#e2dfd6;--main:#0e5c46;--main-lt:#e4f3ed;--red:#b83232;--red-lt:#fdeaea;--gold:#8a6a1a;--gold-lt:#fdf6e3;--radius:10px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}body{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6;min-height:100vh}
+.nav{background:var(--main);position:sticky;top:0;z-index:100}.nav-inner{max-width:1080px;margin:0 auto;padding:0 20px;height:52px;display:flex;align-items:center;gap:8px}.nav-logo{font-size:17px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;margin-right:12px}.nav-link{padding:5px 10px;border-radius:6px;font-size:12px;color:rgba(255,255,255,.7);cursor:pointer}.nav-link.active{background:rgba(255,255,255,.18);color:#fff;font-weight:500}.nav-right{margin-left:auto}.nav-avatar{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.page{max-width:1080px;margin:0 auto;padding:32px 20px 60px;text-align:center}
+.icon{font-size:64px;margin-bottom:16px}.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px;box-shadow:var(--shadow);max-width:560px;margin:0 auto}
+h1{font-size:20px;font-weight:700;margin-bottom:8px;color:var(--ink)}.desc{font-size:13px;color:var(--ink-3);line-height:1.75;margin-bottom:20px}
+.spec-list{text-align:left;display:flex;flex-direction:column;gap:7px;margin-bottom:22px}
+.spec-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--ink-2);line-height:1.6}
+.spec-dot{width:18px;height:18px;border-radius:50%;background:var(--main-lt);color:var(--main);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:11px 22px;background:var(--main);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn:hover{filter:brightness(1.08)}
+.role-badge{display:inline-flex;align-items:center;font-size:11px;padding:3px 10px;border-radius:20px;background:var(--main-lt);color:var(--main);font-weight:500;margin-bottom:12px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;font-size:13px;padding:10px 20px;border-radius:24px;box-shadow:0 4px 16px rgba(0,0,0,.18);transition:transform .3s;white-space:nowrap;pointer-events:none;z-index:999}.toast.show{transform:translateX(-50%) translateY(0)}
+</style></head><body>
+<nav class="nav"><div class="nav-inner"><div class="nav-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Hoshin</div><div class="nav-link active">社員の状態分析</div><div class="nav-right"><div class="nav-avatar">山</div></div></div></nav>
+<div class="page">
+  <div class="card">
+    <div class="role-badge">管理職</div>
+    <div class="icon">🔨</div>
+    <h1>社員の状態分析</h1>
+    <p class="desc">この画面は設計完了・Claude Code での実装待ちです。<br>下記の仕様に基づいて実装してください。</p>
+    <div class="spec-list">
+      <div class="spec-item"><span class="spec-dot">1</span>設計ドキュメント（画面詳細設計）を参照してください</div>
+      <div class="spec-item"><span class="spec-dot">2</span>shared.css の CSS変数を使用してください</div>
+      <div class="spec-item"><span class="spec-dot">3</span>PC・スマホ両対応（レスポンシブ）で実装してください</div>
+      <div class="spec-item"><span class="spec-dot">4</span>他画面と同様のナビゲーション・トーストを実装してください</div>
+    </div>
+    <button class="btn" onclick="history.back()">← 一覧に戻る</button>
+  </div>
+</div>
+<div class="toast" id="t"></div>
+<script>let tt;function toast(m){const e=document.getElementById('t');e.textContent=m;e.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),2200)}</script>
+</body></html>

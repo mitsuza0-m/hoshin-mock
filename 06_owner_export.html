@@ -1,0 +1,105 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Hoshin — 指針書出力</title>
+<style>:root{--ink:#1e1c18;--ink-2:#4a4740;--ink-3:#8a877e;--bg:#f4f2ed;--surface:#fff;--border:#e2dfd6;--owner:#2d5a3d;--owner-md:#1a8060;--owner-lt:#e4f3ed;--red:#b83232;--red-lt:#fdeaea;--warn-lt:#faeeda;--radius:10px;--shadow:0 1px 3px rgba(0,0,0,.06)}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}body{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6}
+.nav{background:var(--owner);position:sticky;top:0;z-index:100}.nav-inner{max-width:900px;margin:0 auto;padding:0 20px;height:52px;display:flex;align-items:center;gap:8px}.nav-logo{font-size:17px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;margin-right:12px}.nav-right{margin-left:auto}.nav-avatar{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.page{max-width:900px;margin:0 auto;padding:24px 20px 60px;display:grid;grid-template-columns:1fr 280px;gap:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;margin-bottom:14px}
+h1{font-size:20px;font-weight:700;margin-bottom:4px}.sub{font-size:12px;color:var(--ink-3);margin-bottom:20px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.field3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+label{display:block;font-size:12px;font-weight:500;color:var(--ink-2);margin-bottom:4px}
+input,select{width:100%;border:1.5px solid var(--border);border-radius:6px;padding:9px 11px;font-size:13px;font-family:inherit;color:var(--ink);background:var(--surface);transition:border-color .15s}
+input:focus,select:focus{outline:none;border-color:var(--owner-md);box-shadow:0 0 0 2px var(--owner-lt)}
+.format-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.format-btn{border:1.5px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;transition:border-color .15s;background:var(--surface)}
+.format-btn.active{border-color:var(--owner-md);background:var(--owner-lt)}
+.format-icon{font-size:22px;margin-bottom:5px}
+.format-label{font-size:13px;font-weight:500}
+.format-desc{font-size:11px;color:var(--ink-3);line-height:1.4}
+.section-check{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;cursor:pointer}
+.section-check:last-child{border-bottom:none}
+.chk{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.chk.on{border-color:var(--owner-md);background:var(--owner-md)}.chk.on::after{content:'✓';color:#fff;font-size:11px;font-weight:700}
+.step-list{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.step-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--ink-2);line-height:1.6}
+.step-num{width:18px;height:18px;border-radius:50%;background:var(--owner-lt);color:var(--owner);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.progress-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+.progress-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px}
+.progress-row:last-child{border-bottom:none}
+.progress-name{flex:1;color:var(--ink-2)}
+.progress-bar-wrap{width:60px;height:5px;background:var(--bg);border-radius:3px;overflow:hidden}
+.progress-bar{height:100%;border-radius:3px}
+.progress-badge{font-size:10px;padding:2px 6px;border-radius:20px;font-weight:500}
+.pb-done{background:var(--owner-lt);color:var(--owner)}
+.pb-doing{background:var(--warn-lt);color:#8a4f10}
+.pb-empty{background:var(--bg);color:var(--ink-3)}
+.warn-box{background:var(--warn-lt);border:1px solid #f0c898;border-radius:8px;padding:10px 12px;display:flex;gap:8px;font-size:12px;color:#7a4010;margin-bottom:14px;line-height:1.55}
+.dl-btn{width:100%;padding:12px;border-radius:8px;background:var(--owner-md);border:none;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s;margin-bottom:8px}
+.dl-btn:hover{background:#145a40}
+.preview-btn{width:100%;padding:10px;border-radius:8px;background:var(--surface);border:1px solid var(--border);color:var(--ink-2);font-size:13px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
+.history-row{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px}
+.history-row:last-child{border-bottom:none}
+.hist-icon{font-size:18px;flex-shrink:0}.hist-name{flex:1;font-weight:500;color:var(--ink)}.hist-date{color:var(--ink-3)}.hist-dl{color:var(--owner-md);cursor:pointer;font-weight:500}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;font-size:13px;padding:10px 20px;border-radius:24px;box-shadow:0 4px 16px rgba(0,0,0,.18);transition:transform .3s;white-space:nowrap;pointer-events:none;z-index:999}.toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:700px){.page{grid-template-columns:1fr}.field-row,.field3,.format-grid{grid-template-columns:1fr}}
+</style></head><body>
+<nav class="nav"><div class="nav-inner"><div class="nav-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Hoshin</div><span style="font-size:12px;color:rgba(255,255,255,.7)">指針書 › ファイルとして保存する</span><div class="nav-right"><div class="nav-avatar">山</div></div></div></nav>
+<div class="page">
+  <div>
+    <h1>ファイルとして保存する</h1>
+    <p class="sub">ここで入力した情報が表紙に反映されます。</p>
+    <div class="card">
+      <div style="font-size:13px;font-weight:600;margin-bottom:12px">基本情報を入力してください</div>
+      <div class="field-row"><div><label>会社名 *</label><input type="text" value="株式会社サンプル"></div><div><label>代表者名 *</label><input type="text" value="山田 太郎"></div></div>
+      <div class="field3"><div><label>期（何期目）*</label><input type="text" value="第12期"></div><div><label>年度 *</label><input type="text" value="2024年度"></div><div><label>発行日 *</label><input type="date" value="2024-04-01"></div></div>
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px;margin-top:4px">ファイルの形式</div>
+      <div class="format-grid">
+        <div class="format-btn active" onclick="selectFormat(this)"><div class="format-icon">📝</div><div class="format-label">Word（.docx）</div><div class="format-desc">あとから自由に編集できます</div></div>
+        <div class="format-btn" onclick="selectFormat(this)"><div class="format-icon">📄</div><div class="format-label">PDF（.pdf）</div><div class="format-desc">社員への配布に適しています</div></div>
+      </div>
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px">出力するセクションを選ぶ</div>
+      <div id="section-checks">
+        <div class="section-check" onclick="toggleChk(this)"><div class="chk on"></div>表紙・目次</div>
+        <div class="section-check" onclick="toggleChk(this)"><div class="chk on"></div>01 経営者の志</div>
+        <div class="section-check" onclick="toggleChk(this)"><div class="chk on"></div>02 経営理念</div>
+        <div class="section-check" onclick="toggleChk(this)"><div class="chk on"></div>03 使命（ミッション）</div>
+        <div class="section-check" onclick="toggleChk(this)"><div class="chk on"></div>04 目指す姿（ビジョン）</div>
+        <div class="section-check" onclick="toggleChk(this)"><div class="chk on"></div>05 大切にする価値観</div>
+        <div class="section-check" onclick="toggleChk(this)"><div class="chk on"></div>06 行動のルール</div>
+        <div class="section-check" onclick="toggleChk(this)"><div class="chk on"></div>07 今年度の目標</div>
+      </div>
+    </div>
+    <div class="card" style="padding:16px 18px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px">過去に保存したファイル</div>
+      <div class="history-row"><span class="hist-icon">📝</span><div class="hist-name">株式会社サンプル_第12期_2024年度_経営指針書.docx</div><span class="hist-date">2024/8/5</span><span class="hist-dl" onclick="toast('ダウンロードします')">DL</span></div>
+      <div class="history-row"><span class="hist-icon">📝</span><div class="hist-name">株式会社サンプル_第11期_2023年度_経営指針書.docx</div><span class="hist-date">2023/4/3</span><span class="hist-dl" onclick="toast('ダウンロードします')">DL</span></div>
+      <div class="history-row"><span class="hist-icon">📄</span><div class="hist-name">株式会社サンプル_第11期_2023年度_経営指針書.pdf</div><span class="hist-date">2023/4/3</span><span class="hist-dl" onclick="toast('ダウンロードします')">DL</span></div>
+    </div>
+  </div>
+  <div>
+    <div class="progress-card">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px">指針書の記入状況</div>
+      <div class="progress-row"><span class="progress-name">経営者の志</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:100%;background:var(--owner-md)"></div></div><span class="progress-badge pb-done">記入済み</span></div>
+      <div class="progress-row"><span class="progress-name">経営理念</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:100%;background:var(--owner-md)"></div></div><span class="progress-badge pb-done">記入済み</span></div>
+      <div class="progress-row"><span class="progress-name">使命</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:100%;background:var(--owner-md)"></div></div><span class="progress-badge pb-done">記入済み</span></div>
+      <div class="progress-row"><span class="progress-name">目指す姿</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:100%;background:var(--owner-md)"></div></div><span class="progress-badge pb-done">記入済み</span></div>
+      <div class="progress-row"><span class="progress-name">大切にする価値観</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:60%;background:#d4a847"></div></div><span class="progress-badge pb-doing">記入中</span></div>
+      <div class="progress-row"><span class="progress-name">行動のルール</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:0%;background:var(--bg)"></div></div><span class="progress-badge pb-empty">未記入</span></div>
+      <div class="progress-row"><span class="progress-name">今年度の目標</span><div class="progress-bar-wrap"><div class="progress-bar" style="width:0%;background:var(--bg)"></div></div><span class="progress-badge pb-empty">未記入</span></div>
+      <div style="margin-top:10px;font-size:11px;color:var(--ink-3)">完成度　5 / 7 項目</div>
+    </div>
+    <div class="warn-box"><span style="font-size:16px;flex-shrink:0">⚠️</span>2項目が未記入です。空白のままファイルに含まれます。</div>
+    <button class="preview-btn" onclick="toast('プレビューを表示します')">👁 出力イメージをプレビューする</button>
+    <div style="height:8px"></div>
+    <button class="dl-btn" onclick="doDownload()">📥 Word ファイルをダウンロードする</button>
+    <div style="font-size:11px;color:var(--ink-3);text-align:center">ファイルは自動で履歴に保存されます</div>
+  </div>
+</div>
+<div class="toast" id="t"></div>
+<script>
+let tt;function toast(m){const e=document.getElementById('t');e.textContent=m;e.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),2200)}
+function selectFormat(el){document.querySelectorAll('.format-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active')}
+function toggleChk(el){el.querySelector('.chk').classList.toggle('on')}
+function doDownload(){const btn=document.querySelector('.dl-btn');btn.innerHTML='<div style="width:16px;height:16px;border-radius:50%;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;animation:spin .7s linear infinite;flex-shrink:0"></div> 作成しています...';btn.disabled=true;setTimeout(()=>{btn.innerHTML='📥 Word ファイルをダウンロードする';btn.disabled=false;toast('ダウンロードしました ✓')},2000)}
+const style=document.createElement('style');style.textContent='@keyframes spin{to{transform:rotate(360deg)}}';document.head.appendChild(style)
+</script>
+</body></html>

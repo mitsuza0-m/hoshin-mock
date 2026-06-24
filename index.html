@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hoshin — モック一覧</title>
+<style>
+:root {
+  --ink:#1e1c18;--ink-2:#4a4740;--ink-3:#8a877e;--ink-4:#c4c1b8;
+  --bg:#f4f2ed;--surface:#fff;--border:#e2dfd6;
+  --owner:#2d5a3d;--owner-lt:#e4f3ed;--owner-md:#1a8060;
+  --teal:#0e5c46;--teal-lt:#e4f3ed;
+  --amber:#b06a10;--amber-lt:#fef3e2;
+  --purple:#3d3591;--purple-lt:#eeedfe;
+  --red:#b83232;--red-lt:#fdeaea;
+  --radius:12px;--shadow:0 2px 8px rgba(0,0,0,.08);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+
+.header{background:var(--owner);padding:40px 20px 32px;text-align:center;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.header-logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px}
+.header-logo-icon{width:42px;height:42px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.header-logo-icon svg{width:24px;height:24px;color:#fff}
+.header-title{font-size:28px;font-weight:800;color:#fff;letter-spacing:-.03em}
+.header-desc{font-size:14px;color:rgba(255,255,255,.7);margin-top:6px}
+.header-version{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);font-size:12px;padding:4px 12px;border-radius:20px;margin-top:12px}
+
+.page{max-width:960px;margin:0 auto;padding:36px 20px 60px}
+
+.role-section{margin-bottom:36px}
+.role-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid}
+.role-owner .role-header{border-color:var(--owner)}
+.role-mgr   .role-header{border-color:var(--teal)}
+.role-mbr   .role-header{border-color:var(--amber)}
+.role-shared.role-header{border-color:var(--purple)}
+.role-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.role-owner .role-icon{background:var(--owner-lt)}
+.role-mgr   .role-icon{background:var(--teal-lt)}
+.role-mbr   .role-icon{background:var(--amber-lt)}
+.role-shared .role-icon{background:var(--purple-lt)}
+.role-title{font-size:17px;font-weight:700}
+.role-owner .role-title{color:var(--owner)}
+.role-mgr   .role-title{color:var(--teal)}
+.role-mbr   .role-title{color:var(--amber)}
+.role-shared .role-title{color:var(--purple)}
+.role-sub{font-size:12px;color:var(--ink-3);margin-top:1px}
+
+.screen-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+.screen-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  text-decoration:none;
+  display:block;
+  transition:transform .15s,box-shadow .15s;
+  box-shadow:var(--shadow);
+}
+.screen-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
+
+.screen-thumb{
+  height:140px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:40px;
+  position:relative;overflow:hidden;
+}
+.role-owner .screen-thumb{background:linear-gradient(135deg,#e4f3ed,#c8e8d8)}
+.role-mgr   .screen-thumb{background:linear-gradient(135deg,#e4f3ed,#c4dff0)}
+.role-mbr   .screen-thumb{background:linear-gradient(135deg,#fef3e2,#fde4b8)}
+.role-shared.screen-thumb{background:linear-gradient(135deg,#eeedfe,#dddcfc)}
+
+.screen-info{padding:12px 14px}
+.screen-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px}
+.screen-desc{font-size:11px;color:var(--ink-3);line-height:1.5}
+.screen-tag{
+  display:inline-flex;align-items:center;
+  font-size:10px;padding:2px 7px;border-radius:20px;
+  font-weight:500;margin-top:6px;
+}
+.tag-done{background:#e4f3ed;color:var(--owner)}
+.tag-new{background:var(--purple-lt);color:var(--purple)}
+
+.stats-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:12px;margin-bottom:36px;
+}
+.stat-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:16px;text-align:center;
+  box-shadow:var(--shadow);
+}
+.stat-val{font-size:28px;font-weight:700;letter-spacing:-.02em}
+.stat-label{font-size:11px;color:var(--ink-3);margin-top:3px}
+
+@media(max-width:700px){
+  .screen-grid{grid-template-columns:repeat(2,1fr)}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:480px){
+  .screen-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">
+    <div class="header-logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+      </svg>
+    </div>
+    <div class="header-title">Hoshin</div>
+  </div>
+  <div class="header-desc">経営指針 × 日報 統合マネジメントシステム — モック一覧</div>
+  <div class="header-version">🗂 社内検証用モック　v1.0　2024年8月</div>
+</div>
+
+<div class="page">
+
+  <!-- 統計 -->
+  <div class="stats-row" style="margin-top:0;padding-top:0">
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--owner)">12</div>
+      <div class="stat-label">総画面数</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--teal)">3</div>
+      <div class="stat-label">ロール種別</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--amber)">PC/SP</div>
+      <div class="stat-label">対応デバイス</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--purple)">AI</div>
+      <div class="stat-label">インタラクション</div>
+    </div>
+  </div>
+
+  <!-- 共通画面 -->
+  <div class="role-section">
+    <div class="role-header role-shared" style="border-color:var(--purple)">
+      <div class="role-icon" style="background:var(--purple-lt)">🔐</div>
+      <div>
+        <div class="role-title" style="color:var(--purple)">共通画面</div>
+        <div class="role-sub">全ロール共通のログイン・認証フロー</div>
+      </div>
+    </div>
+    <div class="screen-grid">
+      <a href="01_login.html" class="screen-card">
+        <div class="screen-thumb" style="background:linear-gradient(135deg,#eeedfe,#dddcfc)">🔐</div>
+        <div class="screen-info">
+          <div class="screen-name">01　ログイン画面</div>
+          <div class="screen-desc">3ロール切り替え・Google連携・新規登録・パスワードリセット</div>
+          <span class="screen-tag tag-done">✓ 完成</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- 経営者 -->
+  <div class="role-section role-owner">
+    <div class="role-header">
+      <div class="role-icon">👔</div>
+      <div>
+        <div class="role-title">経営者（Owner）</div>
+        <div class="role-sub">指針書作成・全社分析・AIレポート・メンバー管理</div>
+      </div>
+    </div>
+    <div class="screen-grid">
+      <a href="02_owner_home.html" class="screen-card">
+        <div class="screen-thumb role-owner">🏠</div>
+        <div class="screen-info">
+          <div class="screen-name">02　経営者ホーム</div>
+          <div class="screen-desc">KPI4点・アラート・指針バー・日報フィード・目標進捗・AIサマリー</div>
+          <span class="screen-tag tag-done">✓ 完成</span>
+        </div>
+      </a>
+      <a href="03_owner_policy_editor.html" class="screen-card">
+        <div class="screen-thumb role-owner">📋</div>
+        <div class="screen-info">
+          <div class="screen-name">03　指針書エディタ</div>
+          <div class="screen-desc">志・理念・ミッション・ビジョン・バリュー・行動指針・目標の7要素入力</div>
+          <span class="screen-tag tag-done">✓ 完成</span>
+        </div>
+      </a>
+      <a href="04_owner_aspiration.html" class="screen-card">
+        <div class="screen-thumb role-owner">🌟</div>
+        <div class="screen-info">
+          <div class="screen-name">04　志ワークシート</div>
+          <div class="screen-desc">ライフラインチャート・価値観抽出・ゴールデンサークル・志の言語化</div>
+          <span class="screen-tag tag-done">✓ 完成</span>
+        </div>
+      </a>
+      <a href="05_owner_analytics.html" class="screen-card">
+        <div class="screen-thumb role-owner">📊</div>
+        <div class="screen-info">
+          <div class="screen-name">05　浸透ダッシュボード</div>
+          <div class="screen-desc">指針別伝わり具合・部門別・メンバー別・月次推移グラフ</div>
+          <span class="screen-tag tag-done">✓ 完成</span>
+        </div>
+      </a>
+      <a href="06_owner_export.html" class="screen-card">
+        <div class="screen-thumb role-owner">📄</div>
+        <div class="screen-info">
+          <div class="screen-name">06　指針書出力</div>
+          <div class="screen-desc">会社情報入力・セクション選択・Word/PDF出力・保存履歴</div>
+          <span class="screen-tag tag-done">✓ 完成</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- 管理職 -->
+  <div class="role-section role-mgr">
+    <div class="role-header">
+      <div class="role-icon">📋</div>
+      <div>
+        <div class="role-title">管理職（Manager）</div>
+        <div class="role-sub">部下の日報確認・コメント・目標管理・感謝称賛</div>
+      </div>
+    </div>
+    <div class="screen-grid">
+      <a href="07_manager_home.html" class="screen-card">
+        <div class="screen-thumb role-mgr">🏠</div>
+        <div class="screen-info">
+          <div class="screen-name">07　管理職ホーム</div>
+          <div class="screen-desc">アラート・メンバー状況・日報フィード・目標進捗・AIアドバイス</div>
+          <span class="screen-tag tag-done">✓ 完成</span>
+        </div>
+      </a>
+      <a href="08_manager_report_detail.html" class="screen-card">
+        <div class="screen-thumb role-mgr">💬</div>
+        <div class="screen-info">
+          <div class="screen-name">08　日報詳細・コメント</div>
+          <div class="screen-desc">日報全文・AIヒント・クイックコメント・メンバー傾向グラフ</div>
+          <span class="screen-tag tag-done">✓ 完成</span>
+        </div>
+      </a>
+      <a href="09_manager_stress.html" class="screen-card">
+        <div class="screen-thumb role-mgr">❤️</div>
+        <div class="screen-info">
+          <div class="screen-name">09　社員の状態分析</div>
+          <div class="screen-desc">成長度・指針理解度・ストレスチェック・エンゲージメント（管理職限定）</div>
+          <span class="screen-tag tag-done">✓ 完成</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- 一般社員 -->
+  <div class="role-section role-mbr">
+    <div class="role-header">
+      <div class="role-icon">🙋</div>
+      <div>
+        <div class="role-title">一般社員（Member）</div>
+        <div class="role-sub">日報入力・振り返り・成長記録・指針書閲覧</div>
+      </div>
+    </div>
+    <div class="screen-grid">
+      <a href="10_member_home.html" class="screen-card">
+        <div class="screen-thumb role-mbr">🏠</div>
+        <div class="screen-info">
+          <div class="screen-name">10　社員ホーム</div>
+          <div class="screen-desc">今日の日報CTA・コメント通知・タスク確認・今週の言葉</div>
+          <span class="screen-tag tag-done">✓ 完成</span>
+        </div>
+      </a>
+      <a href="11_member_report.html" class="screen-card">
+        <div class="screen-thumb role-mbr">✏️</div>
+        <div class="screen-info">
+          <div class="screen-name">11　日報入力</div>
+          <div class="screen-desc">Googleカレンダー連携・タスク・報告・指針タグ・感謝称賛・週末振り返り</div>
+          <span class="screen-tag tag-done">✓ 完成</span>
+        </div>
+      </a>
+      <a href="12_member_growth.html" class="screen-card">
+        <div class="screen-thumb role-mbr">📈</div>
+        <div class="screen-info">
+          <div class="screen-name">12　自分の成長記録</div>
+          <div class="screen-desc">成長度・指針理解度・過去日報・目標・AIメッセージ・偉人の言葉</div>
+          <span class="screen-tag tag-done">✓ 完成</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Claude Code向け案内 -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-top:8px">
+    <div style="font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:7px">
+      <span>💻</span> Claude Code での編集方法
+    </div>
+    <div style="font-size:13px;color:var(--ink-2);line-height:1.75">
+      <strong>ファイル構成：</strong> 各画面は独立したHTMLファイルです。<code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">shared.css</code> を共通スタイルとして参照しています。<br>
+      <strong>画面番号：</strong> 01_login.html〜12_member_growth.html の12ファイル構成です。<br>
+      <strong>カラー変数：</strong> <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">:root</code> 内のCSS変数を変更することで全体の色を一括変更できます。<br>
+      <strong>インタラクション：</strong> 各ファイル末尾の <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">&lt;script&gt;</code> ブロックに操作ロジックが記述されています。
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

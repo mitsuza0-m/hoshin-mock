@@ -1,0 +1,148 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Hoshin — 志ワークシート</title>
+<style>:root{--ink:#1e1c18;--ink-2:#4a4740;--ink-3:#8a877e;--ink-4:#c4c1b8;--bg:#f4f2ed;--surface:#fff;--border:#e2dfd6;--owner:#2d5a3d;--owner-md:#1a8060;--owner-lt:#e4f3ed;--red:#b83232;--red-lt:#fdeaea;--purple:#3d3591;--purple-lt:#eeedfe;--orange:#c05010;--orange-lt:#fdeee6;--radius:10px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}body{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6;min-height:100vh}
+.nav{background:var(--owner);position:sticky;top:0;z-index:100}.nav-inner{max-width:860px;margin:0 auto;padding:0 20px;height:52px;display:flex;align-items:center;gap:8px}.nav-logo{font-size:17px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;margin-right:12px}.nav-right{margin-left:auto}.nav-avatar{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.page{max-width:860px;margin:0 auto;padding:28px 20px 60px}
+.step-bar{display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:24px;gap:0;box-shadow:var(--shadow)}
+.step{flex:1;text-align:center;cursor:pointer}.step-circle{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;margin:0 auto 4px}.step-done .step-circle{background:var(--owner-lt);color:var(--owner);border:1.5px solid var(--owner-md)}.step-active .step-circle{background:var(--owner-md);color:#fff}.step-todo .step-circle{background:var(--bg);color:var(--ink-4);border:1.5px solid var(--border)}.step-label{font-size:10px;color:var(--ink-3)}.step-active .step-label{color:var(--owner);font-weight:500}.step-line{flex:0 0 32px;height:2px;background:var(--border);margin-bottom:16px}.step-line.done{background:var(--owner-md)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);margin-bottom:16px}
+.card-header{padding:16px 18px 0;display:flex;align-items:center;gap:8px}.card-icon{font-size:20px}.card-title{font-size:14px;font-weight:600}.card-desc{padding:4px 18px 14px;font-size:12px;color:var(--ink-3);line-height:1.5}.card-body{padding:0 18px 18px}
+.lifeline-area{position:relative;background:var(--bg);border-radius:8px;padding:16px;overflow:hidden;cursor:crosshair}
+.ll-axis-x{position:absolute;bottom:40px;left:40px;right:16px;height:1px;background:var(--border);opacity:.6}
+.ll-axis-y{position:absolute;left:40px;top:16px;bottom:40px;width:1px;background:var(--border);opacity:.6}
+.ll-zero{position:absolute;bottom:40px;left:40px;right:16px;height:1px;background:var(--border);opacity:.4;border-top:1px dashed var(--ink-4)}
+.ll-label-y-high{position:absolute;left:4px;top:20px;font-size:10px;color:var(--ink-3)}.ll-label-y-low{position:absolute;left:10px;bottom:44px;font-size:10px;color:var(--ink-3)}
+.ll-x-labels{position:absolute;bottom:18px;left:40px;right:16px;display:flex;justify-content:space-between}
+.ll-x-label{font-size:10px;color:var(--ink-4)}
+.ll-svg{width:100%;height:160px;display:block}
+.ll-point{cursor:pointer;transition:r .15s}
+.ll-point:hover r{r:8}
+.event-card{background:var(--bg);border-radius:6px;padding:10px 12px;margin-bottom:8px;border-left:3px solid}
+.event-high{border-left-color:var(--owner-md)}.event-low{border-left-color:var(--red)}.event-mid{border-left-color:#d4a847}
+.event-top{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.event-badge{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500}
+.eb-high{background:var(--owner-lt);color:var(--owner)}.eb-low{background:var(--red-lt);color:var(--red)}.eb-mid{background:#fdf6e3;color:#8a6a1a}
+.event-title{font-size:13px;font-weight:600}
+.event-why{font-size:12px;line-height:1.65;color:var(--owner);border-top:1px solid var(--border);padding-top:5px;margin-top:5px}
+.event-low .event-why{color:var(--red)}.event-mid .event-why{color:#7a5a10}
+.why-label{font-size:10px;font-weight:600;margin-bottom:2px;opacity:.7}
+textarea{width:100%;border:1.5px solid var(--border);border-radius:6px;padding:9px 11px;font-size:13px;font-family:inherit;color:var(--ink);background:var(--surface);transition:border-color .15s;line-height:1.6;resize:vertical;min-height:64px}
+textarea:focus{outline:none;border-color:var(--owner-md);box-shadow:0 0 0 2px var(--owner-lt)}
+textarea::placeholder{color:var(--ink-4)}
+.value-tag{display:inline-flex;align-items:center;gap:4px;background:var(--owner-lt);color:var(--owner);font-size:12px;padding:4px 12px;border-radius:20px;font-weight:500;margin:3px}
+.ai-wisdom{background:linear-gradient(135deg,var(--purple-lt),var(--owner-lt));border:1px solid #c8c4f4;border-radius:10px;padding:16px 18px;text-align:center;margin-bottom:16px}
+.wisdom-type{font-size:11px;font-weight:600;color:var(--purple);margin-bottom:6px}
+.wisdom-main{font-size:24px;font-weight:700;letter-spacing:.08em;color:var(--purple);margin-bottom:4px}
+.wisdom-reading{font-size:12px;color:var(--purple);opacity:.65;margin-bottom:8px}
+.wisdom-meaning{font-size:12px;color:var(--purple);line-height:1.7;background:rgba(255,255,255,.6);padding:8px 12px;border-radius:6px}
+.submit-btn{width:100%;padding:13px;border-radius:8px;background:var(--owner-md);border:none;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
+.submit-btn:hover{background:#145a40}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;font-size:13px;padding:10px 20px;border-radius:24px;box-shadow:0 4px 16px rgba(0,0,0,.18);transition:transform .3s cubic-bezier(.4,0,.2,1);white-space:nowrap;pointer-events:none;z-index:999}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style></head><body>
+<nav class="nav"><div class="nav-inner">
+  <div class="nav-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Hoshin</div>
+  <span style="font-size:12px;color:rgba(255,255,255,.7)">指針書 › あなたの志を見つける</span>
+  <div class="nav-right"><div class="nav-avatar">山</div></div>
+</div></nav>
+<div class="page">
+  <h1 style="font-size:20px;font-weight:700;margin-bottom:4px">あなたの志を見つける</h1>
+  <p style="font-size:12px;color:var(--ink-3);margin-bottom:18px">4つのステップで「なぜこの仕事をしているのか」を言葉にします。途中で保存できます。</p>
+
+  <div class="step-bar">
+    <div class="step step-done"><div class="step-circle">✓</div><div class="step-label">人生の棚卸し</div></div>
+    <div class="step-line done"></div>
+    <div class="step step-done"><div class="step-circle">✓</div><div class="step-label">価値観の抽出</div></div>
+    <div class="step-line done"></div>
+    <div class="step step-active"><div class="step-circle">3</div><div class="step-label">Whyを掘る</div></div>
+    <div class="step-line"></div>
+    <div class="step step-todo"><div class="step-circle">4</div><div class="step-label">志の言語化</div></div>
+  </div>
+
+  <!-- ライフラインチャート -->
+  <div class="card">
+    <div class="card-header"><span class="card-icon">📈</span><span class="card-title">Step 1　人生を振り返る（ライフラインチャート）</span></div>
+    <div class="card-desc">人生の山と谷を描き、感情が動いた出来事を記録します。クリックでポイントを追加できます。</div>
+    <div class="card-body">
+      <div class="lifeline-area" style="height:200px" onclick="toast('出来事ポイントを追加しました')">
+        <div class="ll-label-y-high">高</div><div class="ll-label-y-low">低</div>
+        <div class="ll-axis-x"></div><div class="ll-axis-y"></div>
+        <div class="ll-x-labels"><span class="ll-x-label">幼少期</span><span class="ll-x-label">10代</span><span class="ll-x-label">20代前半</span><span class="ll-x-label">20代後半</span><span class="ll-x-label">30代</span><span class="ll-x-label">40代〜</span></div>
+        <svg viewBox="0 0 600 140" style="width:100%;height:140px;position:absolute;top:10px;left:40px;right:0;width:calc(100% - 56px)">
+          <polyline points="0,100 100,60 200,30 280,110 340,120 420,35 500,20 560,18" fill="none" stroke="#2d5a3d" stroke-width="2.5" opacity=".8"/>
+          <circle cx="200" cy="30" r="6" fill="#2d5a3d" opacity=".9" onclick="toast('初めての起業')"/>
+          <circle cx="340" cy="120" r="6" fill="#b83232" opacity=".9"/>
+          <circle cx="500" cy="20" r="6" fill="#2d5a3d" opacity=".9"/>
+        </svg>
+      </div>
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+        <div class="event-card event-high">
+          <div class="event-top"><span class="event-badge eb-high">20代前半</span><span class="event-title">初めての起業（感情: 高）</span></div>
+          <p style="font-size:12px;color:var(--ink-2)">大学の友人と小さなIT会社を立ち上げた。</p>
+          <div class="event-why"><div class="why-label">なぜ感情が動いたか</div>「自分で決めて動ける」解放感と、人と一緒に何かを作る喜びを初めて感じた。</div>
+        </div>
+        <div class="event-card event-low">
+          <div class="event-top"><span class="event-badge eb-low">20代後半</span><span class="event-title">事業失敗・倒産（感情: 低）</span></div>
+          <p style="font-size:12px;color:var(--ink-2)">資金繰りに失敗し、従業員に給料を払えず会社を閉じた。</p>
+          <div class="event-why"><div class="why-label">なぜ感情が動いたか</div>自分の判断ミスで人の人生に影響を与えた罪悪感。「信頼を裏切った」という痛みが今も残る。</div>
+        </div>
+        <div class="event-card event-high">
+          <div class="event-top"><span class="event-badge eb-high">30代</span><span class="event-title">現会社の再出発（感情: 高）</span></div>
+          <p style="font-size:12px;color:var(--ink-2)">信頼第一で再起。初年度に黒字化を達成した。</p>
+          <div class="event-why"><div class="why-label">なぜ感情が動いたか</div>仲間が信じてついてきてくれた。人が人を信頼することの力を体感した。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 価値観 -->
+  <div class="card">
+    <div class="card-header"><span class="card-icon">💎</span><span class="card-title">Step 2　価値観の抽出</span></div>
+    <div class="card-desc">振り返りから浮かび上がったキーワードです。AIが自動抽出しました。</div>
+    <div class="card-body">
+      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px">
+        <span class="value-tag">誠実さ</span><span class="value-tag">信頼関係</span><span class="value-tag">自律・自由</span><span class="value-tag">人の成長</span><span class="value-tag">責任</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+        <div>
+          <label style="font-size:12px;color:var(--ink-3);display:block;margin-bottom:4px">最も怒りを感じた瞬間は？</label>
+          <textarea style="min-height:56px;font-size:12px">自分の判断で人を傷つけたこと。信頼を守れなかった自分への憤り。</textarea>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--ink-3);display:block;margin-bottom:4px">「これは間違っている」と感じたことは？</label>
+          <textarea style="min-height:56px;font-size:12px">大企業で人が数字に変換される感覚。現場の声が経営に届かない構造。</textarea>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--ink-3);display:block;margin-bottom:4px">最も心が震えた「ありがとう」は？</label>
+          <textarea style="min-height:56px;font-size:12px">再起した社員から「ここで働いて人生が変わった」と言われた瞬間。</textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI偉人の言葉 -->
+  <div class="ai-wisdom">
+    <div class="wisdom-type">✦ あなたの振り返りから選んだ言葉</div>
+    <div class="wisdom-main">七転び八起き</div>
+    <div class="wisdom-reading">ななころびやおき</div>
+    <div class="wisdom-meaning">何度失敗しても立ち上がる力。倒産という痛みを乗り越え再起したあなたの姿そのものです。</div>
+  </div>
+
+  <!-- 志カード -->
+  <div class="card" style="border:1.5px solid var(--owner-md)">
+    <div class="card-header"><span class="card-icon">🌟</span><span class="card-title">Step 4　志を一文にまとめる</span></div>
+    <div class="card-desc">AIが下書きを提案します。あなた自身の言葉で書き直してください。</div>
+    <div class="card-body">
+      <div style="background:var(--owner-lt);border-radius:8px;padding:12px 14px;margin-bottom:12px;text-align:center">
+        <div style="font-size:11px;color:var(--owner);margin-bottom:6px">AIが提案した志</div>
+        <div style="font-size:16px;font-weight:700;color:var(--owner);line-height:1.7">「志ある経営者を増やし、働くすべての人が意味を感じられる社会をつくる。」</div>
+      </div>
+      <label style="font-size:12px;color:var(--ink-3);display:block;margin-bottom:4px">あなた自身の言葉で書き直す</label>
+      <textarea style="min-height:64px;font-size:14px">志ある経営者を増やし、働くすべての人が意味を感じられる社会をつくる。</textarea>
+      <button class="submit-btn" style="margin-top:12px" onclick="toast('志を保存して指針書に反映しました ✓')">この志を指針書に反映する</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="t"></div>
+<script>let tt;function toast(m){const e=document.getElementById('t');e.textContent=m;e.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),2200)}</script>
+</body></html>

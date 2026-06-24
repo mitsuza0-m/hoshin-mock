@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Hoshin — 指針書エディタ</title>
+<style>
+:root{--ink:#1e1c18;--ink-2:#4a4740;--ink-3:#8a877e;--ink-4:#c4c1b8;--bg:#f4f2ed;--surface:#fff;--border:#e2dfd6;--owner:#2d5a3d;--owner-md:#1a8060;--owner-lt:#e4f3ed;--red:#b83232;--red-lt:#fdeaea;--purple:#3d3591;--purple-lt:#eeedfe;--radius:10px;--radius-sm:6px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6;min-height:100vh}
+.nav{background:var(--owner);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1080px;margin:0 auto;padding:0 20px;height:52px;display:flex;align-items:center;gap:8px}
+.nav-logo{font-size:17px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;margin-right:12px}
+.nav-link{padding:5px 10px;border-radius:6px;font-size:12px;color:rgba(255,255,255,.7);cursor:pointer;transition:background .15s}
+.nav-link:hover{background:rgba(255,255,255,.12)}
+.nav-link.active{background:rgba(255,255,255,.18);color:#fff;font-weight:500}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.nav-avatar{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.page{max-width:1080px;margin:0 auto;padding:24px 20px 60px;display:grid;grid-template-columns:200px 1fr;gap:20px}
+.sidebar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;height:fit-content;position:sticky;top:68px}
+.sidebar-head{padding:14px 16px;font-size:12px;font-weight:600;color:var(--ink-3);border-bottom:1px solid var(--border)}
+.sidebar-item{padding:11px 16px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .12s;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sidebar-item:last-child{border-bottom:none}
+.sidebar-item:hover{background:var(--bg)}
+.sidebar-item.active{background:var(--owner-lt);color:var(--owner);font-weight:500}
+.sidebar-item .check{font-size:13px;color:var(--owner-md)}
+.sidebar-item .empty{font-size:10px;color:var(--ink-4)}
+.sidebar-pub{padding:12px 16px;border-top:1px solid var(--border)}
+.pub-btn{width:100%;padding:9px;background:var(--owner);border:none;color:#fff;font-size:13px;font-weight:600;border-radius:6px;cursor:pointer;font-family:inherit;transition:background .15s}
+.pub-btn:hover{background:#1a4530}
+.main{min-width:0}
+.main-header{margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.main-header h1{font-size:20px;font-weight:700}
+.save-status{font-size:12px;color:var(--ink-3);display:flex;align-items:center;gap:5px}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;margin-bottom:16px}
+.section-card.active-section{border-color:var(--owner-md);box-shadow:0 0 0 2px var(--owner-lt)}
+.section-label{font-size:11px;font-weight:600;color:var(--owner);letter-spacing:.04em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.section-title{font-size:16px;font-weight:700;margin-bottom:4px}
+.section-desc{font-size:12px;color:var(--ink-3);margin-bottom:14px;line-height:1.5}
+.field{margin-bottom:14px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--ink-2);margin-bottom:4px}
+.field label .req{color:var(--red)}
+textarea,input[type=text]{width:100%;border:1.5px solid var(--border);border-radius:6px;padding:9px 11px;font-size:13px;font-family:inherit;color:var(--ink);background:var(--surface);transition:border-color .15s;line-height:1.6;resize:vertical}
+textarea:focus,input[type=text]:focus{outline:none;border-color:var(--owner-md);box-shadow:0 0 0 2px var(--owner-lt)}
+textarea::placeholder,input::placeholder{color:var(--ink-4)}
+textarea{min-height:72px}
+.keyword-wrap{display:flex;flex-wrap:wrap;gap:6px;padding:9px 11px;border:1.5px solid var(--border);border-radius:6px;min-height:42px;cursor:text;transition:border-color .15s}
+.keyword-wrap:focus-within{border-color:var(--owner-md);box-shadow:0 0 0 2px var(--owner-lt)}
+.kw-tag{display:inline-flex;align-items:center;gap:4px;background:var(--owner-lt);color:var(--owner);font-size:12px;padding:3px 8px;border-radius:20px;font-weight:500}
+.kw-tag button{background:none;border:none;cursor:pointer;color:var(--owner);font-size:14px;line-height:1;padding:0}
+.kw-input{border:none;outline:none;font-size:12px;font-family:inherit;color:var(--ink);min-width:80px;background:transparent}
+.value-card{background:var(--bg);border-radius:6px;padding:12px 14px;margin-bottom:8px;border-left:3px solid var(--owner);display:flex;gap:10px;align-items:flex-start}
+.value-num{width:22px;height:22px;border-radius:50%;background:var(--owner);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.value-body{flex:1;min-width:0}
+.value-title-input{width:100%;border:none;border-bottom:1px solid var(--border);background:transparent;font-size:14px;font-weight:600;font-family:inherit;padding:2px 0 4px;margin-bottom:6px;color:var(--ink)}
+.value-title-input:focus{outline:none;border-bottom-color:var(--owner-md)}
+.add-btn{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--owner);cursor:pointer;padding:6px;background:none;border:none;font-family:inherit;transition:opacity .15s}
+.add-btn:hover{opacity:.7}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin-bottom:16px;overflow:hidden}
+.progress-fill{height:100%;background:var(--owner-md);border-radius:2px;transition:width .4s}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;font-size:13px;padding:10px 20px;border-radius:24px;box-shadow:0 4px 16px rgba(0,0,0,.18);transition:transform .3s cubic-bezier(.4,0,.2,1);white-space:nowrap;pointer-events:none;z-index:999}
+.toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:700px){.page{grid-template-columns:1fr}.sidebar{position:static;display:flex;flex-wrap:wrap;gap:0}.sidebar-item{flex:0 0 50%}}
+</style></head><body>
+<nav class="nav"><div class="nav-inner">
+  <div class="nav-logo">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    Hoshin
+  </div>
+  <div class="nav-link" onclick="toast('ホームへ')">ホーム</div>
+  <div class="nav-link active">指針書</div>
+  <div class="nav-link" onclick="toast('日報一覧へ')">日報一覧</div>
+  <div class="nav-link" onclick="toast('レポートへ')">レポート</div>
+  <div class="nav-right"><div class="nav-avatar">山</div></div>
+</div></nav>
+
+<div class="page">
+  <div class="sidebar">
+    <div class="sidebar-head">記入する項目</div>
+    <div class="sidebar-item" onclick="toast('志セクションへ')">あなたの志 <span class="check">✓</span></div>
+    <div class="sidebar-item active">経営理念 <span class="check">✓</span></div>
+    <div class="sidebar-item" onclick="toast('ミッションへ')">使命（ミッション）<span class="check">✓</span></div>
+    <div class="sidebar-item" onclick="toast('ビジョンへ')">目指す姿（ビジョン）<span class="check">✓</span></div>
+    <div class="sidebar-item" onclick="toast('バリューへ')">大切にする価値観 <span class="empty">記入中</span></div>
+    <div class="sidebar-item" onclick="toast('行動指針へ')">行動のルール <span class="empty">未記入</span></div>
+    <div class="sidebar-item" onclick="toast('目標へ')">今年度の目標 <span class="empty">未記入</span></div>
+    <div class="sidebar-pub">
+      <div style="font-size:11px;color:var(--ink-3);margin-bottom:7px">完成度　5 / 7</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:71%"></div></div>
+      <button class="pub-btn" onclick="toast('全社に公開しました ✓')">全社に公開する</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="main-header">
+      <h1>指針書をつくる</h1>
+      <div class="save-status">💾 自動保存しました</div>
+    </div>
+
+    <!-- 経営理念 -->
+    <div class="section-card active-section">
+      <div class="section-label">02 経営理念</div>
+      <div class="section-title">会社はなぜ存在するのか</div>
+      <div class="section-desc">会社の根本的な存在意義を一文で表します。変わらない核心です。</div>
+      <div class="field">
+        <label>理念文（1〜2文） <span class="req">*</span></label>
+        <textarea>私たちは、人と人の繋がりを大切にし、すべての関わる人の幸福に貢献します。</textarea>
+      </div>
+      <div class="field">
+        <label>この理念の背景・想い</label>
+        <textarea placeholder="例：創業当時から大切にしてきた考え方を..." style="min-height:88px">創業当時から一貫して大切にしてきた「人」を中心とした考え方を、すべての事業活動の土台に置いています。利益よりも先に人を大切にすることで、長期的な信頼関係が生まれると信じています。</textarea>
+      </div>
+      <div class="field">
+        <label>日報を書くときに意識してほしいこと（社員へのメッセージ）</label>
+        <input type="text" value="今日の行動が、誰かの幸福に繋がっていますか？">
+      </div>
+      <div class="field">
+        <label>AIタグ付けに使うキーワード</label>
+        <div class="keyword-wrap">
+          <span class="kw-tag">人を大切に <button onclick="event.stopPropagation()">×</button></span>
+          <span class="kw-tag">幸福貢献 <button onclick="event.stopPropagation()">×</button></span>
+          <span class="kw-tag">繋がり <button onclick="event.stopPropagation()">×</button></span>
+          <input class="kw-input" placeholder="＋ キーワードを追加" onkeydown="if(event.key==='Enter'){toast('キーワードを追加しました')}">
+        </div>
+      </div>
+    </div>
+
+    <!-- バリュー -->
+    <div class="section-card">
+      <div class="section-label">05 大切にする価値観（バリュー）</div>
+      <div class="section-title">私たちが判断に迷ったときの拠り所</div>
+      <div class="section-desc">複数登録できます。各バリューに具体例を添えましょう。</div>
+      <div class="value-card">
+        <div class="value-num">1</div>
+        <div class="value-body">
+          <input type="text" class="value-title-input" value="誠実であれ">
+          <textarea style="min-height:52px">言葉と行動を一致させ、約束を守る。透明性を持って関係者と向き合う。</textarea>
+          <div style="margin-top:6px">
+            <label style="font-size:11px;color:var(--ink-3);display:block;margin-bottom:3px">具体例</label>
+            <input type="text" value="会議で言ったことは必ず実行する。できないときはその場で正直に伝える。">
+          </div>
+        </div>
+      </div>
+      <div class="value-card">
+        <div class="value-num">2</div>
+        <div class="value-body">
+          <input type="text" class="value-title-input" value="挑戦を楽しむ">
+          <textarea style="min-height:52px">失敗を恐れず新しいことに取り組む。学びに変えて前に進む。</textarea>
+          <div style="margin-top:6px">
+            <label style="font-size:11px;color:var(--ink-3);display:block;margin-bottom:3px">具体例</label>
+            <input type="text" placeholder="例：月1回は新しい提案を試みる">
+          </div>
+        </div>
+      </div>
+      <button class="add-btn" onclick="toast('バリューを追加しました')">＋ バリューを追加する</button>
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button style="padding:10px 20px;border-radius:6px;border:1px solid var(--border);background:var(--surface);font-size:13px;cursor:pointer;font-family:inherit" onclick="toast('下書きを保存しました')">下書き保存</button>
+      <button style="padding:10px 20px;border-radius:6px;background:var(--owner);border:none;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit" onclick="toast('保存して次の項目へ ✓')">保存して次へ →</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="t"></div>
+<script>let tt;function toast(m){const e=document.getElementById('t');e.textContent=m;e.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),2200)}</script>
+</body></html>

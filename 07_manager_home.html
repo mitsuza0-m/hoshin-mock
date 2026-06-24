@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hoshin — 管理職ホーム</title>
+<style>
+:root {
+  --ink:        #1e1c18;
+  --ink-2:      #4a4740;
+  --ink-3:      #8a877e;
+  --ink-4:      #c4c1b8;
+  --bg:         #f4f7f5;
+  --surface:    #ffffff;
+  --border:     #dde8e2;
+  --teal:       #0e5c46;
+  --teal-md:    #1a8060;
+  --teal-lt:    #e4f3ed;
+  --teal-btn:   #0d5240;
+  --amber:      #b06a10;
+  --amber-lt:   #fef3e2;
+  --red:        #b83232;
+  --red-lt:     #fdeaea;
+  --orange:     #c05010;
+  --orange-lt:  #fdeee6;
+  --purple:     #3d3591;
+  --purple-lt:  #eeedfe;
+  --gold:       #8a6a1a;
+  --gold-lt:    #fdf6e3;
+  --radius:     10px;
+  --radius-sm:  6px;
+  --shadow:     0 1px 3px rgba(0,0,0,.06);
+  --shadow-md:  0 2px 8px rgba(0,0,0,.08);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  font-size:15px;
+  line-height:1.6;
+  min-height:100vh;
+}
+
+/* ── ナビ ── */
+.nav{
+  background:var(--teal);
+  position:sticky;top:0;z-index:100;
+}
+.nav-inner{
+  max-width:1080px;margin:0 auto;
+  padding:0 20px;height:54px;
+  display:flex;align-items:center;gap:6px;
+}
+.nav-logo{
+  font-size:18px;font-weight:700;
+  letter-spacing:-.02em;color:#fff;
+  display:flex;align-items:center;gap:7px;
+  margin-right:14px;
+}
+.nav-logo svg{width:20px;height:20px;opacity:.9}
+.nav-link{
+  padding:5px 11px;border-radius:var(--radius-sm);
+  font-size:13px;color:rgba(255,255,255,.7);
+  cursor:pointer;transition:background .15s;white-space:nowrap;
+}
+.nav-link:hover{background:rgba(255,255,255,.12)}
+.nav-link.active{background:rgba(255,255,255,.18);color:#fff;font-weight:500}
+.nav-right{display:flex;align-items:center;gap:10px;margin-left:auto}
+.nav-bell{
+  position:relative;cursor:pointer;
+  color:rgba(255,255,255,.75);font-size:20px;
+  width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:var(--radius-sm);transition:background .15s;
+}
+.nav-bell:hover{background:rgba(255,255,255,.12)}
+.bell-dot{
+  position:absolute;top:5px;right:5px;
+  width:8px;height:8px;background:var(--red);
+  border-radius:50%;border:2px solid var(--teal);
+}
+.nav-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.22);color:#fff;
+  font-size:12px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .15s;
+}
+.nav-avatar:hover{background:rgba(255,255,255,.32)}
+.hamburger{
+  display:none;flex-direction:column;gap:4px;
+  cursor:pointer;padding:8px;
+}
+.hamburger span{
+  display:block;width:20px;height:2px;
+  background:rgba(255,255,255,.8);border-radius:2px;
+}
+
+/* ── ページ ── */
+.page{max-width:1080px;margin:0 auto;padding:26px 20px 70px}
+
+/* ── ヘッダー ── */
+.page-header{
+  display:flex;align-items:flex-start;
+  justify-content:space-between;gap:16px;
+  margin-bottom:22px;
+}
+.page-header-left h1{
+  font-size:22px;font-weight:700;
+  letter-spacing:-.02em;margin-bottom:3px;
+}
+.page-header-left p{font-size:12px;color:var(--ink-3)}
+.quick-write{
+  display:flex;align-items:center;gap:7px;
+  background:var(--teal-md);color:#fff;
+  border:none;border-radius:var(--radius);
+  padding:10px 18px;font-size:13px;font-weight:600;
+  cursor:pointer;font-family:inherit;
+  transition:background .15s;white-space:nowrap;
+  box-shadow:var(--shadow-md);
+}
+.quick-write:hover{background:var(--teal-btn)}
+
+/* ── アラート ── */
+.alert-list{display:flex;flex-direction:column;gap:9px;margin-bottom:22px}
+.alert{
+  border-radius:var(--radius);padding:13px 16px;
+  display:flex;gap:12px;align-items:flex-start;
+  cursor:pointer;transition:opacity .15s;
+}
+.alert:hover{opacity:.9}
+.alert-urgent{
+  background:var(--red-lt);
+  border:1.5px solid #e5aaaa;
+}
+.alert-warn{
+  background:var(--orange-lt);
+  border:1px solid #f0b890;
+}
+.alert-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.alert-body{flex:1;min-width:0}
+.alert-title{font-size:13px;font-weight:600;margin-bottom:2px}
+.alert-urgent .alert-title{color:var(--red)}
+.alert-warn .alert-title{color:var(--orange)}
+.alert-desc{font-size:12px;line-height:1.55}
+.alert-urgent .alert-desc{color:#8a3232}
+.alert-warn .alert-desc{color:#7a3810}
+.alert-btn{
+  flex-shrink:0;align-self:center;
+  font-size:12px;font-weight:500;
+  padding:5px 12px;border-radius:var(--radius-sm);
+  border:1.5px solid currentColor;
+  background:none;cursor:pointer;
+  font-family:inherit;transition:background .15s;
+  white-space:nowrap;
+}
+.alert-urgent .alert-btn{color:var(--red)}
+.alert-urgent .alert-btn:hover{background:#f7d4d4}
+.alert-warn .alert-btn{color:var(--orange)}
+.alert-warn .alert-btn:hover{background:#f7ddd0}
+
+/* ── メインCTA ── */
+.main-cta{
+  background:var(--teal);
+  border-radius:var(--radius);
+  padding:18px 22px;
+  display:flex;align-items:center;
+  justify-content:space-between;gap:16px;
+  cursor:pointer;transition:background .15s;
+  margin-bottom:22px;border:none;width:100%;
+  text-align:left;box-shadow:var(--shadow-md);
+}
+.main-cta:hover{background:var(--teal-btn)}
+.main-cta h2{font-size:16px;font-weight:700;color:#fff;margin-bottom:3px}
+.main-cta p{font-size:12px;color:rgba(255,255,255,.72)}
+.cta-badge{
+  background:var(--red);color:#fff;
+  font-size:13px;font-weight:700;
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.cta-arrow{
+  width:38px;height:38px;border-radius:50%;
+  background:rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:20px;flex-shrink:0;
+}
+
+/* ── KPIグリッド ── */
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;margin-bottom:22px;
+}
+.kpi-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:14px 16px;
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  transition:border-color .15s,box-shadow .15s;
+}
+.kpi-card:hover{
+  border-color:var(--teal-md);
+  box-shadow:0 0 0 2px var(--teal-lt);
+}
+.kpi-label{font-size:11px;color:var(--ink-3);margin-bottom:6px;line-height:1.4}
+.kpi-val{
+  font-size:28px;font-weight:700;
+  letter-spacing:-.02em;line-height:1;margin-bottom:5px;
+}
+.kpi-sub{font-size:11px;display:flex;align-items:center;gap:3px}
+.up{color:var(--teal-md)}
+.down{color:var(--red)}
+.neutral{color:var(--ink-3)}
+
+/* ── 2カラム ── */
+.two-col{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:18px;margin-bottom:22px;
+}
+
+/* ── カード ── */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.card-head{
+  padding:14px 16px 0;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:2px;
+}
+.card-title{font-size:13px;font-weight:600;color:var(--ink)}
+.card-link{
+  font-size:12px;color:var(--teal-md);
+  cursor:pointer;text-decoration:none;
+}
+.card-link:hover{text-decoration:underline}
+
+/* ── メンバーリスト ── */
+.member-list{padding:8px 16px 14px}
+.member-row{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 0;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background .12s;
+  border-radius:var(--radius-sm);
+  padding-left:4px;padding-right:4px;
+}
+.member-row:last-child{border-bottom:none}
+.member-row:hover{background:var(--bg)}
+.avatar{
+  width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:600;flex-shrink:0;
+}
+.av-teal  {background:var(--teal-lt);color:var(--teal)}
+.av-amber {background:var(--amber-lt);color:var(--amber)}
+.av-purple{background:var(--purple-lt);color:var(--purple)}
+.av-red   {background:var(--red-lt);color:var(--red)}
+.member-info{flex:1;min-width:0}
+.member-name{font-size:13px;font-weight:500;color:var(--ink)}
+.member-sub{font-size:11px;color:var(--ink-3)}
+.member-sub.warn{color:var(--red);font-weight:500}
+.bar-wrap{
+  width:72px;height:6px;
+  background:var(--bg);border-radius:3px;
+  overflow:hidden;flex-shrink:0;
+}
+.bar-fill{height:100%;border-radius:3px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+.bar-green{background:var(--teal-md)}
+.bar-yellow{background:#d4a847}
+.bar-red{background:var(--red)}
+.member-pct{font-size:12px;min-width:28px;text-align:right;flex-shrink:0}
+.badge{
+  display:inline-flex;align-items:center;
+  font-size:10px;padding:2px 8px;border-radius:20px;
+  font-weight:500;flex-shrink:0;
+}
+.badge-good   {background:var(--teal-lt);color:var(--teal)}
+.badge-mid    {background:var(--gold-lt);color:var(--gold)}
+.badge-warn   {background:var(--orange-lt);color:var(--orange)}
+.badge-danger {background:var(--red-lt);color:var(--red);border:1px solid #e5aaaa}
+
+/* ── 日報フィード ── */
+.report-list{}
+.report-item{
+  padding:12px 16px;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background .12s;
+}
+.report-item:last-child{border-bottom:none}
+.report-item:hover{background:var(--bg)}
+.report-top{
+  display:flex;align-items:center;gap:7px;
+  flex-wrap:wrap;margin-bottom:5px;
+}
+.r-name{font-size:13px;font-weight:600}
+.r-dept{font-size:11px;color:var(--ink-3)}
+.r-date{font-size:11px;color:var(--ink-4);margin-left:auto}
+.r-tag{
+  display:inline-flex;font-size:11px;padding:2px 8px;
+  border-radius:20px;background:var(--teal-lt);color:var(--teal);
+  font-weight:500;margin-right:3px;
+}
+.r-body{
+  font-size:12px;color:var(--ink-2);line-height:1.6;
+  overflow:hidden;display:-webkit-box;
+  -webkit-line-clamp:2;-webkit-box-orient:vertical;
+}
+.ai-chip{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:10px;padding:2px 7px;border-radius:20px;
+  font-weight:500;margin-left:auto;flex-shrink:0;
+}
+.ai-ok  {background:var(--teal-lt);color:var(--teal)}
+.ai-chk {background:var(--orange-lt);color:var(--orange)}
+.ai-ng  {background:var(--red-lt);color:var(--red)}
+.comment-chip{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:10px;padding:2px 7px;border-radius:20px;
+  font-weight:500;
+}
+.comment-needed{background:var(--orange-lt);color:var(--orange);border:1px solid #f0b890}
+.comment-done  {background:var(--teal-lt);color:var(--teal)}
+
+/* ── 指針バー ── */
+.policy-list{padding:12px 16px 14px;display:flex;flex-direction:column;gap:10px}
+.policy-meta{
+  display:flex;justify-content:space-between;
+  align-items:center;margin-bottom:4px;
+}
+.policy-name{font-size:12px;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+.policy-pct{font-size:12px;font-weight:600}
+.policy-bar-wrap{height:7px;background:var(--bg);border-radius:4px;overflow:hidden}
+.policy-bar{height:100%;border-radius:4px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+.p-high  {background:var(--teal-md)}
+.p-mid   {background:#d4a847}
+.p-low   {background:var(--red)}
+
+/* ── 目標リスト ── */
+.goal-list{}
+.goal-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background .12s;
+}
+.goal-item:last-child{border-bottom:none}
+.goal-item:hover{background:var(--bg)}
+.goal-name{font-size:13px;color:var(--ink);flex:1;min-width:0}
+.goal-sub{font-size:10px;color:var(--ink-3);margin-top:1px}
+.goal-num{font-size:12px;color:var(--ink-3);white-space:nowrap;flex-shrink:0}
+.goal-num strong{color:var(--ink);font-size:13px}
+.goal-bar-wrap{width:60px;height:6px;background:var(--bg);border-radius:3px;overflow:hidden;flex-shrink:0}
+.goal-bar{height:100%;border-radius:3px}
+.goal-pct{font-size:12px;font-weight:600;min-width:30px;text-align:right;flex-shrink:0}
+.update-btn{
+  font-size:11px;padding:4px 9px;
+  border-radius:var(--radius-sm);
+  border:1px solid var(--border);
+  background:var(--surface);cursor:pointer;
+  color:var(--ink-2);font-family:inherit;
+  transition:border-color .15s;
+  white-space:nowrap;
+}
+.update-btn:hover{border-color:var(--teal-md);color:var(--teal)}
+
+/* ── AIサマリー ── */
+.ai-summary{padding:14px 16px}
+.ai-head{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.ai-orb{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--purple);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.ai-title{font-size:13px;font-weight:600;color:var(--ink)}
+.ai-sub{font-size:11px;color:var(--ink-3)}
+.ai-row{
+  display:flex;gap:8px;
+  font-size:12px;color:var(--ink-2);
+  line-height:1.65;padding:7px 0;
+  border-top:1px solid var(--border);
+  align-items:flex-start;
+}
+.ai-row-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.ai-cta{
+  margin-top:12px;width:100%;
+  padding:9px;border-radius:var(--radius-sm);
+  background:var(--purple-lt);
+  border:1px solid #c8c4f4;
+  color:var(--purple);font-size:12px;font-weight:500;
+  cursor:pointer;font-family:inherit;transition:background .15s;
+}
+.ai-cta:hover{background:#dddcfc}
+
+/* ── 感謝・称賛 ── */
+.praise-list{padding:10px 16px 14px;display:flex;flex-direction:column;gap:8px}
+.praise-item{
+  background:var(--bg);border-radius:var(--radius-sm);
+  padding:10px 12px;
+}
+.praise-from{font-size:11px;color:var(--ink-3);margin-bottom:3px}
+.praise-text{font-size:12px;color:var(--ink-2);line-height:1.6}
+.praise-person{
+  display:flex;align-items:center;gap:7px;
+  margin-bottom:6px;
+}
+.praise-count{
+  font-size:11px;font-weight:500;
+  padding:2px 8px;border-radius:20px;
+  margin-left:auto;
+}
+.pc-green{background:var(--teal-lt);color:var(--teal)}
+.pc-amber{background:var(--amber-lt);color:var(--amber)}
+
+/* ── 週末ボックス ── */
+.friday-box{
+  background:var(--gold-lt);
+  border:1px solid #e8d090;
+  border-radius:var(--radius);
+  padding:14px 16px;
+  margin-bottom:22px;
+  display:flex;align-items:flex-start;gap:12px;
+}
+.friday-box-icon{font-size:24px;flex-shrink:0}
+.friday-title{font-size:13px;font-weight:600;color:var(--gold);margin-bottom:3px}
+.friday-desc{font-size:12px;color:#7a5a10;line-height:1.55}
+.friday-btn{
+  margin-top:8px;
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:12px;font-weight:500;
+  padding:6px 14px;border-radius:var(--radius-sm);
+  background:var(--gold);color:#fff;
+  border:none;cursor:pointer;font-family:inherit;
+  transition:opacity .15s;
+}
+.friday-btn:hover{opacity:.88}
+
+/* ── クイックアクション ── */
+.quick-actions{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:12px;margin-bottom:22px;
+}
+.qa-btn{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:14px;
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;transition:border-color .15s,box-shadow .15s;
+  box-shadow:var(--shadow);
+  text-align:left;
+}
+.qa-btn:hover{
+  border-color:var(--teal-md);
+  box-shadow:0 0 0 2px var(--teal-lt);
+}
+.qa-icon{
+  width:36px;height:36px;border-radius:var(--radius-sm);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.qi-teal  {background:var(--teal-lt)}
+.qi-amber {background:var(--amber-lt)}
+.qi-purple{background:var(--purple-lt)}
+.qa-label{font-size:13px;font-weight:500;color:var(--ink)}
+.qa-sub{font-size:11px;color:var(--ink-3)}
+
+/* ── トースト ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--ink);color:#fff;
+  font-size:13px;padding:10px 20px;
+  border-radius:24px;
+  box-shadow:0 4px 16px rgba(0,0,0,.18);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+  white-space:nowrap;pointer-events:none;z-index:999;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── 詳細モーダル ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(14,28,22,.55);z-index:200;
+  align-items:center;justify-content:center;
+  padding:20px;
+}
+.modal-overlay.show{display:flex}
+.modal{
+  background:var(--surface);
+  border-radius:14px;
+  width:100%;max-width:520px;
+  max-height:90vh;overflow-y:auto;
+  box-shadow:0 8px 40px rgba(0,0,0,.2);
+}
+.modal-head{
+  padding:18px 20px 0;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-title{font-size:16px;font-weight:700}
+.modal-close{
+  background:none;border:none;
+  font-size:22px;color:var(--ink-3);
+  cursor:pointer;padding:4px;
+  border-radius:var(--radius-sm);
+  line-height:1;transition:background .15s;
+}
+.modal-close:hover{background:var(--bg)}
+.modal-body{padding:14px 20px 20px}
+.modal-field{margin-bottom:12px}
+.modal-label{font-size:12px;font-weight:500;color:var(--ink-3);margin-bottom:5px}
+.modal-text{
+  font-size:13px;color:var(--ink-2);
+  line-height:1.75;
+  background:var(--bg);border-radius:var(--radius-sm);
+  padding:10px 12px;
+}
+.comment-area{
+  width:100%;min-height:100px;
+  border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);padding:10px 12px;
+  font-size:13px;font-family:inherit;
+  color:var(--ink);background:var(--surface);
+  resize:vertical;transition:border-color .15s;
+  line-height:1.6;
+}
+.comment-area:focus{outline:none;border-color:var(--teal-md);box-shadow:0 0 0 2px var(--teal-lt)}
+.comment-area::placeholder{color:var(--ink-4)}
+.quick-comments{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.qc-btn{
+  font-size:11px;padding:5px 10px;
+  border-radius:var(--radius-sm);
+  border:1px solid var(--border);
+  background:var(--surface);cursor:pointer;
+  color:var(--ink-2);font-family:inherit;
+  transition:border-color .15s;
+}
+.qc-btn:hover{border-color:var(--teal-md);color:var(--teal)}
+.send-btn{
+  width:100%;padding:12px;
+  border-radius:var(--radius-sm);
+  background:var(--teal-md);border:none;
+  color:#fff;font-size:14px;font-weight:600;
+  cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  transition:background .15s;
+}
+.send-btn:hover{background:var(--teal-btn)}
+.ai-hint{
+  background:var(--orange-lt);border:1px solid #f0b890;
+  border-radius:var(--radius-sm);padding:9px 12px;
+  font-size:12px;color:var(--orange);
+  margin-bottom:12px;line-height:1.6;
+}
+
+/* ── モバイルナビ ── */
+.mobile-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--surface);border-top:1px solid var(--border);
+  padding:6px 0 max(6px,env(safe-area-inset-bottom));
+  z-index:100;
+}
+.mobile-nav-inner{display:flex;justify-content:space-around}
+.mnav-btn{
+  display:flex;flex-direction:column;align-items:center;
+  gap:2px;padding:4px 10px;
+  border:none;background:none;cursor:pointer;
+  color:var(--ink-3);font-size:10px;font-family:inherit;
+  border-radius:var(--radius-sm);transition:color .15s;
+}
+.mnav-btn.active{color:var(--teal)}
+.mnav-btn svg{width:22px;height:22px}
+
+/* ── レスポンシブ ── */
+@media(max-width:900px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .two-col{grid-template-columns:1fr}
+  .quick-actions{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .nav-link{display:none}
+  .hamburger{display:flex}
+  .page{padding:16px 16px 80px}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .kpi-val{font-size:24px}
+  .quick-actions{grid-template-columns:1fr}
+  .mobile-nav{display:block}
+  .alert{flex-direction:column;gap:8px}
+  .alert-btn{align-self:flex-start}
+  .page-header{flex-direction:column;gap:10px}
+  .quick-write{width:100%;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ナビ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+      </svg>
+      Hoshin
+    </div>
+    <div class="nav-link active">ホーム</div>
+    <div class="nav-link" onclick="toast('部下の日報ページへ')">部下の日報</div>
+    <div class="nav-link" onclick="toast('チームの目標ページへ')">チームの目標</div>
+    <div class="nav-link" onclick="toast('指針書ページへ')">指針書を読む</div>
+    <div class="nav-link" onclick="toast('レポートページへ')">チームのレポート</div>
+    <div class="nav-right">
+      <div class="nav-bell" onclick="toast('通知を確認します')">
+        🔔<div class="bell-dot"></div>
+      </div>
+      <div class="nav-avatar" onclick="toast('プロフィール設定')">田</div>
+    </div>
+    <div class="hamburger" onclick="toast('メニューを開きます')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<main class="page">
+
+  <!-- ヘッダー -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>おはようございます、田中さん。</h1>
+      <p>2024年8月9日（金）　営業チーム リーダー</p>
+    </div>
+    <button class="quick-write" onclick="toast('自分の日報を書く画面へ')">
+      ✏️ 今日の自分の日報を書く
+    </button>
+  </div>
+
+  <!-- アラート -->
+  <div class="alert-list">
+    <div class="alert alert-urgent" onclick="openModal('sato')">
+      <div class="alert-icon">🚨</div>
+      <div class="alert-body">
+        <div class="alert-title">佐藤 健太さんの日報が3日間出ていません</div>
+        <div class="alert-desc">体調や業務上の困りごとがないか、声をかけてみてください。ストレスのサインも検出されています（管理職・経営者のみ表示）。</div>
+      </div>
+      <button class="alert-btn" onclick="event.stopPropagation();toast('佐藤さんへのメッセージ画面へ')">声をかける</button>
+    </div>
+    <div class="alert alert-warn" onclick="toast('指針の詳細を確認します')">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-body">
+        <div class="alert-title">「挑戦を楽しむ」指針への言及が今月1件だけです</div>
+        <div class="alert-desc">チーム全体でほぼ触れられていません。次の朝礼で話題にしてみましょう。</div>
+      </div>
+      <button class="alert-btn" onclick="event.stopPropagation();toast('指針の状況を詳しく見ます')">確認する</button>
+    </div>
+  </div>
+
+  <!-- メインCTA -->
+  <button class="main-cta" onclick="toast('未確認の日報一覧へ移動します')">
+    <div>
+      <h2>部下の日報を確認する</h2>
+      <p>まだ確認していない日報が5件あります</p>
+    </div>
+    <div class="cta-badge">5</div>
+    <div class="cta-arrow">→</div>
+  </button>
+
+  <!-- KPI -->
+  <div class="kpi-grid">
+    <div class="kpi-card" onclick="toast('日報提出率の詳細を表示')">
+      <div class="kpi-label">今月の日報提出率（チーム）</div>
+      <div class="kpi-val" style="color:var(--teal)">82%</div>
+      <div class="kpi-sub up">↑ 先月より +4%</div>
+    </div>
+    <div class="kpi-card" onclick="toast('指針の伝わり具合を詳しく見る')">
+      <div class="kpi-label">指針が伝わっている度合い</div>
+      <div class="kpi-val">71%</div>
+      <div class="kpi-sub neutral">目標 80%</div>
+    </div>
+    <div class="kpi-card" onclick="toast('未コメントの日報一覧へ')">
+      <div class="kpi-label">未コメントの日報</div>
+      <div class="kpi-val" style="color:var(--red)">5件</div>
+      <div class="kpi-sub down">↓ 返信が必要です</div>
+    </div>
+    <div class="kpi-card" onclick="toast('チームの目標詳細へ')">
+      <div class="kpi-label">チームの目標の進み</div>
+      <div class="kpi-val">65%</div>
+      <div class="kpi-sub neutral">3目標の平均</div>
+    </div>
+  </div>
+
+  <!-- メンバー状況 + 日報フィード -->
+  <div class="two-col">
+
+    <!-- 左：メンバー -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">メンバーの状況</span>
+        <a class="card-link" onclick="toast('全メンバーの詳細を表示')">全員を見る</a>
+      </div>
+      <div class="member-list">
+        <div class="member-row" onclick="toast('田中一郎さんの詳細へ')">
+          <div class="avatar av-teal">田</div>
+          <div class="member-info">
+            <div class="member-name">田中 一郎</div>
+            <div class="member-sub">今日 提出済み</div>
+          </div>
+          <div class="bar-wrap"><div class="bar-fill bar-green" style="width:92%"></div></div>
+          <div class="member-pct" style="color:var(--teal)">92%</div>
+          <span class="badge badge-good">良好</span>
+        </div>
+        <div class="member-row" onclick="toast('鈴木花子さんの詳細へ')">
+          <div class="avatar av-amber">鈴</div>
+          <div class="member-info">
+            <div class="member-name">鈴木 花子</div>
+            <div class="member-sub">今日 提出済み</div>
+          </div>
+          <div class="bar-wrap"><div class="bar-fill bar-green" style="width:78%"></div></div>
+          <div class="member-pct">78%</div>
+          <span class="badge badge-mid">普通</span>
+        </div>
+        <div class="member-row" onclick="toast('山本次郎さんの詳細へ')">
+          <div class="avatar av-purple">山</div>
+          <div class="member-info">
+            <div class="member-name">山本 次郎</div>
+            <div class="member-sub">昨日 提出済み</div>
+          </div>
+          <div class="bar-wrap"><div class="bar-fill bar-yellow" style="width:54%"></div></div>
+          <div class="member-pct" style="color:var(--gold)">54%</div>
+          <span class="badge badge-warn">要注目</span>
+        </div>
+        <div class="member-row" onclick="openModal('sato')">
+          <div class="avatar av-red">佐</div>
+          <div class="member-info">
+            <div class="member-name" style="color:var(--red)">佐藤 健太</div>
+            <div class="member-sub warn">3日間 未提出</div>
+          </div>
+          <div class="bar-wrap"><div class="bar-fill bar-red" style="width:38%"></div></div>
+          <div class="member-pct" style="color:var(--red)">38%</div>
+          <span class="badge badge-danger">声かけを</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右：日報フィード -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">最近の日報</span>
+        <a class="card-link" onclick="toast('日報一覧ページへ')">全件を見る</a>
+      </div>
+      <div class="report-list">
+        <div class="report-item" onclick="openModal('report1')">
+          <div class="report-top">
+            <div class="avatar av-purple" style="width:28px;height:28px;font-size:11px">山</div>
+            <span class="r-name">山本 次郎</span>
+            <span class="r-dept">営業</span>
+            <span class="comment-chip comment-needed">未コメント</span>
+            <span class="r-date">今日</span>
+          </div>
+          <div style="margin-bottom:5px"><span class="r-tag">お客様第一</span></div>
+          <div class="r-body">午前中に既存顧客のA社を訪問。先月の提案に対するフィードバックをいただき、修正点を整理した。午後は提案書の改訂作業。</div>
+          <div style="margin-top:6px;display:flex;gap:6px;align-items:center">
+            <span class="ai-chip ai-chk">✦ 確認が必要</span>
+          </div>
+        </div>
+        <div class="report-item" onclick="openModal('report2')">
+          <div class="report-top">
+            <div class="avatar av-teal" style="width:28px;height:28px;font-size:11px">田</div>
+            <span class="r-name">田中 一郎</span>
+            <span class="r-dept">営業</span>
+            <span class="comment-chip comment-done">コメント済み</span>
+            <span class="r-date">今日</span>
+          </div>
+          <div style="margin-bottom:5px"><span class="r-tag">お客様第一</span><span class="r-tag">改善継続</span></div>
+          <div class="r-body">新規顧客のB社を初訪問。先方の経営課題を3点ヒアリングし、次回提案のアジェンダを作成した。顧客の言葉をそのままメモすることを意識した。</div>
+          <div style="margin-top:6px">
+            <span class="ai-chip ai-ok">✓ 指針と合っています</span>
+          </div>
+        </div>
+        <div class="report-item" onclick="openModal('report3')">
+          <div class="report-top">
+            <div class="avatar av-amber" style="width:28px;height:28px;font-size:11px">鈴</div>
+            <span class="r-name">鈴木 花子</span>
+            <span class="r-dept">営業</span>
+            <span class="comment-chip comment-needed">未コメント</span>
+            <span class="r-date">昨日</span>
+          </div>
+          <div style="margin-bottom:5px"><span class="r-tag">チーム協働</span></div>
+          <div class="r-body">スプリントレビューを実施。チーム間の認識のズレを解消し、次回改善点を合意した。</div>
+          <div style="margin-top:6px">
+            <span class="ai-chip ai-ok">✓ 指針と合っています</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 指針バー + 目標 -->
+  <div class="two-col">
+
+    <!-- 左：指針 -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">指針ごとの「伝わり具合」（今月）</span>
+        <a class="card-link" onclick="toast('指針レポートへ')">詳細を見る</a>
+      </div>
+      <div class="policy-list">
+        <div>
+          <div class="policy-meta">
+            <span class="policy-name">お客様第一 <span class="badge badge-good">良好</span></span>
+            <span class="policy-pct" style="color:var(--teal)">84%</span>
+          </div>
+          <div class="policy-bar-wrap"><div class="policy-bar p-high" style="width:84%"></div></div>
+        </div>
+        <div>
+          <div class="policy-meta">
+            <span class="policy-name">誠実に行動する <span class="badge badge-mid">普通</span></span>
+            <span class="policy-pct">66%</span>
+          </div>
+          <div class="policy-bar-wrap"><div class="policy-bar p-mid" style="width:66%"></div></div>
+        </div>
+        <div>
+          <div class="policy-meta">
+            <span class="policy-name">改善を続ける <span class="badge badge-mid">普通</span></span>
+            <span class="policy-pct">54%</span>
+          </div>
+          <div class="policy-bar-wrap"><div class="policy-bar p-mid" style="width:54%"></div></div>
+        </div>
+        <div>
+          <div class="policy-meta">
+            <span class="policy-name" style="color:var(--red)">挑戦を楽しむ <span class="badge badge-danger">要対応</span></span>
+            <span class="policy-pct" style="color:var(--red)">12%</span>
+          </div>
+          <div class="policy-bar-wrap"><div class="policy-bar p-low" style="width:12%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右：目標 -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">チームの目標の進み</span>
+        <a class="card-link" onclick="toast('目標管理ページへ')">すべて見る</a>
+      </div>
+      <div class="goal-list">
+        <div class="goal-item" onclick="toast('新規商談数の詳細へ')">
+          <div>
+            <div class="goal-name">新規商談件数</div>
+            <div class="goal-sub">売上目標に繋がる</div>
+          </div>
+          <div class="goal-num"><strong>13</strong> / 月20件</div>
+          <div class="goal-bar-wrap"><div class="goal-bar" style="width:65%;background:#d4a847"></div></div>
+          <div class="goal-pct" style="color:var(--gold)">65%</div>
+          <button class="update-btn" onclick="event.stopPropagation();toast('数字を更新します')">更新</button>
+        </div>
+        <div class="goal-item" onclick="toast('受注率の詳細へ')">
+          <div>
+            <div class="goal-name">受注率</div>
+            <div class="goal-sub">売上目標に繋がる</div>
+          </div>
+          <div class="goal-num"><strong>31%</strong> / 40%</div>
+          <div class="goal-bar-wrap"><div class="goal-bar" style="width:77%;background:#d4a847"></div></div>
+          <div class="goal-pct" style="color:var(--gold)">77%</div>
+          <button class="update-btn" onclick="event.stopPropagation();toast('数字を更新します')">更新</button>
+        </div>
+        <div class="goal-item" onclick="toast('顧客訪問回数の詳細へ')">
+          <div>
+            <div class="goal-name">顧客訪問回数</div>
+            <div class="goal-sub">満足度目標に繋がる</div>
+          </div>
+          <div class="goal-num" style="color:var(--red)"><strong>週1.8回</strong> / 週3回</div>
+          <div class="goal-bar-wrap"><div class="goal-bar" style="width:60%;background:var(--red)"></div></div>
+          <div class="goal-pct" style="color:var(--red)">60%</div>
+          <button class="update-btn" onclick="event.stopPropagation();toast('数字を更新します')">更新</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 金曜限定：感謝・称賛 -->
+  <div class="friday-box">
+    <div class="friday-box-icon">⭐</div>
+    <div style="flex:1">
+      <div class="friday-title">今週の感謝・称賛が集まりました（毎週金曜）</div>
+      <div class="friday-desc">メンバーから寄せられた感謝と称賛の声です。月曜の朝礼で共有しましょう。</div>
+      <button class="friday-btn" onclick="openModal('praise')">今週の感謝・称賛を確認する →</button>
+    </div>
+  </div>
+
+  <!-- AIサマリー -->
+  <div class="card" style="margin-bottom:22px">
+    <div class="ai-summary">
+      <div class="ai-head">
+        <div class="ai-orb">✦</div>
+        <div>
+          <div class="ai-title">AIからチームへのアドバイス</div>
+          <div class="ai-sub">今月の日報 163件を分析しました</div>
+        </div>
+      </div>
+      <div class="ai-row">
+        <div class="ai-row-icon">✅</div>
+        <div>「お客様第一」の指針への言及が84%と高水準。田中さんの行動が全体を牽引しています。</div>
+      </div>
+      <div class="ai-row">
+        <div class="ai-row-icon">⚠️</div>
+        <div>「挑戦を楽しむ」指針が12%と最低水準です。次の朝礼で「最近挑戦したこと」を一人ひとりに話してもらう時間を設けましょう。</div>
+      </div>
+      <div class="ai-row">
+        <div class="ai-row-icon">💡</div>
+        <div>佐藤さんの日報提出が止まっています。1on1の機会をつくることを検討してください。</div>
+      </div>
+      <button class="ai-cta" onclick="toast('チームレポートの全文を表示します')">今月のチームレポートを全文で読む →</button>
+    </div>
+  </div>
+
+  <!-- クイックアクション -->
+  <div class="quick-actions">
+    <button class="qa-btn" onclick="toast('指針書を読む画面へ')">
+      <div class="qa-icon qi-teal">📋</div>
+      <div>
+        <div class="qa-label">会社の指針書を読む</div>
+        <div class="qa-sub">経営者が更新しました</div>
+      </div>
+    </button>
+    <button class="qa-btn" onclick="toast('チームのレポートへ')">
+      <div class="qa-icon qi-amber">📊</div>
+      <div>
+        <div class="qa-label">チームのレポートを見る</div>
+        <div class="qa-sub">8月分 自動生成済み</div>
+      </div>
+    </button>
+    <button class="qa-btn" onclick="toast('メンバーの状態分析へ')">
+      <div class="qa-icon qi-purple">📈</div>
+      <div>
+        <div class="qa-label">社員の成長・状態を見る</div>
+        <div class="qa-sub">成長度・指針理解度など</div>
+      </div>
+    </button>
+  </div>
+
+</main>
+
+<!-- モバイルナビ -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mnav-btn active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>ホーム
+    </button>
+    <button class="mnav-btn" onclick="toast('部下の日報へ')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>日報
+    </button>
+    <button class="mnav-btn" onclick="toast('チームの目標へ')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>目標
+    </button>
+    <button class="mnav-btn" onclick="toast('レポートへ')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>レポート
+    </button>
+  </div>
+</nav>
+
+<!-- 日報コメントモーダル -->
+<div class="modal-overlay" id="modal-report" onclick="closeModal('report')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-report-title">山本 次郎さんの日報</div>
+      <button class="modal-close" onclick="closeModal('report')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-field">
+        <div class="modal-label">日付・指針タグ</div>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+          <span style="font-size:12px;color:var(--ink-3)" id="modal-report-date">2024年8月9日（金）</span>
+          <span class="r-tag" id="modal-report-tag">お客様第一</span>
+          <span class="ai-chip ai-chk" id="modal-report-ai">✦ 確認が必要</span>
+        </div>
+      </div>
+      <div class="modal-field">
+        <div class="modal-label">今日やったこと</div>
+        <div class="modal-text" id="modal-report-body">午前中に既存顧客のA社を訪問。先月の提案に対するフィードバックをいただき、修正点を整理した。午後は提案書の改訂作業を行い、来週月曜日の再提案に向けて準備を進めた。</div>
+      </div>
+      <div class="modal-field">
+        <div class="modal-label">気づいたこと・学んだこと</div>
+        <div class="modal-text" id="modal-report-learning">お客様は「価格」より「使いやすさ」を重視していることがわかった。次回は機能説明より操作イメージを見せることが大事だと感じた。</div>
+      </div>
+      <div class="ai-hint" id="modal-ai-hint">
+        <strong>AIより：</strong>「お客様第一」の指針に沿った行動です。ただし今月「挑戦を楽しむ」指針への言及が0件です。このコメントでその点を励ましてみましょう。
+      </div>
+      <div class="modal-label" style="margin-bottom:6px">よく使うコメント（タップで挿入）</div>
+      <div class="quick-comments">
+        <button class="qc-btn" onclick="insertComment('よく気づけています！')">よく気づけています！</button>
+        <button class="qc-btn" onclick="insertComment('次回の提案が楽しみです。')">次回が楽しみです</button>
+        <button class="qc-btn" onclick="insertComment('指針を意識できていますね。')">指針を意識できています</button>
+        <button class="qc-btn" onclick="insertComment('一度話しましょう。')">一度話しましょう</button>
+      </div>
+      <div class="modal-label" style="margin-bottom:5px">コメントを書く</div>
+      <textarea class="comment-area" id="comment-area" placeholder="例：顧客の声をしっかり聞けていますね。「使いやすさ重視」という気づきは大切な視点です。来週の再提案が楽しみです！&#10;&#10;挑戦という観点でも何か新しいアプローチを試してみてください。"></textarea>
+      <div style="margin-top:10px">
+        <button class="send-btn" onclick="sendComment()">
+          ✉️ コメントを送る
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 感謝・称賛モーダル -->
+<div class="modal-overlay" id="modal-praise" onclick="closeModal('praise')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="modal-title">今週の感謝・称賛（8/5週）</div>
+      <button class="modal-close" onclick="closeModal('praise')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:var(--gold-lt);border:1px solid #e8d090;border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--gold)">
+        💡 月曜の朝礼でこの内容を読み上げることをおすすめします。チームのモチベーションが上がります。
+      </div>
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:5px">💛 感謝されたメンバー</div>
+      <div class="praise-list" style="padding:0;margin-bottom:16px">
+        <div class="praise-item">
+          <div class="praise-person">
+            <div class="avatar av-amber" style="width:30px;height:30px;font-size:11px">鈴</div>
+            <div style="font-size:13px;font-weight:500">鈴木 花子</div>
+            <span class="praise-count pc-green">2件</span>
+          </div>
+          <div class="praise-from">田中さんより：</div>
+          <div class="praise-text">「提案書のデザインを手伝ってくれてありがとう。おかげで見やすい資料になりました。」</div>
+        </div>
+        <div class="praise-item">
+          <div class="praise-person">
+            <div class="avatar av-purple" style="width:30px;height:30px;font-size:11px">山</div>
+            <div style="font-size:13px;font-weight:500">山本 次郎</div>
+            <span class="praise-count pc-amber">1件</span>
+          </div>
+          <div class="praise-from">田中さんより：</div>
+          <div class="praise-text">「急なお願いにも快く対応してくれてありがとう。」</div>
+        </div>
+      </div>
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:5px">⭐ 頑張っていたメンバー</div>
+      <div class="praise-list" style="padding:0;margin-bottom:16px">
+        <div class="praise-item">
+          <div class="praise-person">
+            <div class="avatar av-teal" style="width:30px;height:30px;font-size:11px">田</div>
+            <div style="font-size:13px;font-weight:500">田中 一郎</div>
+            <span class="praise-count pc-green">2名が選びました</span>
+          </div>
+          <div class="praise-from">鈴木さんより：</div>
+          <div class="praise-text">「今週は毎日顧客訪問を続けていた。C社対応が丁寧で自分も学びになった。」</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="send-btn" onclick="toast('全員にメールで送りました ✉️');closeModal('praise')">✉️ 全員にメールで送る</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 佐藤さんモーダル -->
+<div class="modal-overlay" id="modal-sato" onclick="closeModal('sato')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="modal-title" style="color:var(--red)">🚨 佐藤 健太さん — 要対応</div>
+      <button class="modal-close" onclick="closeModal('sato')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:var(--red-lt);border:1.5px solid #e5aaaa;border-radius:var(--radius-sm);padding:12px;margin-bottom:14px">
+        <div style="font-size:13px;font-weight:600;color:var(--red);margin-bottom:5px">日報が3日間出ていません</div>
+        <div style="font-size:12px;color:#8a3232;line-height:1.65">提出率が先月の90%→38%に低下しています。体調や業務上の困りごとがないか確認してください。</div>
+      </div>
+      <div style="background:var(--orange-lt);border:1px solid #f0b890;border-radius:var(--radius-sm);padding:12px;margin-bottom:14px">
+        <div style="font-size:12px;font-weight:600;color:var(--orange);margin-bottom:4px">🔒 管理職・経営者のみ：ストレスサインを検出</div>
+        <div style="font-size:11px;color:#7a3810;line-height:1.65">日報の文章量が70%減少、ネガティブな表現が増加しています。できるだけ早く1on1の機会をつくることを推奨します。</div>
+      </div>
+      <div style="font-size:12px;font-weight:500;color:var(--ink-2);margin-bottom:8px">推奨する対応</div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
+        <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--ink-2)">
+          <span style="color:var(--red);flex-shrink:0">1.</span>できるだけ早く1on1の場を設ける
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--ink-2)">
+          <span style="color:var(--red);flex-shrink:0">2.</span>業務量・人間関係・プライベートの状況を確認する
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--ink-2)">
+          <span style="color:var(--red);flex-shrink:0">3.</span>必要に応じて産業医・専門家への相談を検討する
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="send-btn" onclick="toast('佐藤さんへメッセージを送りました');closeModal('sato')" style="flex:1">✉️ 佐藤さんにメッセージを送る</button>
+        <button onclick="toast('対応済みとして記録しました');closeModal('sato')" style="flex:0 0 auto;padding:10px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);font-size:13px;cursor:pointer;font-family:inherit;color:var(--ink-2)">対応済みにする</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- トースト -->
+<div class="toast" id="toast-el"></div>
+
+<script>
+// トースト
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast-el');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// モーダル開閉
+const reportData = {
+  report1: {
+    title:'山本 次郎さんの日報',
+    date:'2024年8月9日（金）',
+    tag:'お客様第一',
+    ai:'✦ 確認が必要',
+    aiClass:'ai-chk',
+    body:'午前中に既存顧客のA社を訪問。先月の提案に対するフィードバックをいただき、修正点を整理した。午後は提案書の改訂作業を行い、来週月曜日の再提案に向けて準備を進めた。',
+    learning:'お客様は「価格」より「使いやすさ」を重視していることがわかった。次回は機能説明より操作イメージを見せることが大事だと感じた。',
+    hint:'<strong>AIより：</strong>「お客様第一」の指針に沿った行動です。ただし今月「挑戦を楽しむ」指針への言及が0件です。このコメントでその点を励ましてみましょう。'
+  },
+  report2: {
+    title:'田中 一郎さんの日報',
+    date:'2024年8月9日（金）',
+    tag:'お客様第一 / 改善継続',
+    ai:'✓ 指針と合っています',
+    aiClass:'ai-ok',
+    body:'新規顧客のB社を初訪問。先方の経営課題を3点ヒアリングし、次回提案のアジェンダを作成した。顧客の言葉をそのままメモすることを意識した。',
+    learning:'顧客との対話の中で「聞く」ことの重要性を再確認した。質問の仕方を工夫するだけで、情報量が大きく変わることを実感した。',
+    hint:'<strong>AIより：</strong>「お客様第一」「改善継続」両方の指針に沿った素晴らしい日報です。チームへの横展開を検討してみましょう。'
+  },
+  report3: {
+    title:'鈴木 花子さんの日報',
+    date:'2024年8月8日（木）',
+    tag:'チーム協働',
+    ai:'✓ 指針と合っています',
+    aiClass:'ai-ok',
+    body:'スプリントレビューを実施。チーム間の認識のズレを解消し、次回改善点を合意した。会議のファシリテーションを担当し、全員が発言できる場を作った。',
+    learning:'ファシリテーターとして「全員の声を引き出す」ことの難しさを実感した。次回は事前にアジェンダを共有することで改善できると思う。',
+    hint:'<strong>AIより：</strong>「チーム協働」の指針を体現した日報です。ファシリテーションへの挑戦も「挑戦を楽しむ」指針に繋がっています。'
+  }
+};
+
+function openModal(type) {
+  if(type === 'sato') {
+    document.getElementById('modal-sato').classList.add('show');
+    return;
+  }
+  if(type === 'praise') {
+    document.getElementById('modal-praise').classList.add('show');
+    return;
+  }
+  // report
+  const d = reportData[type];
+  if(!d) return;
+  document.getElementById('modal-report-title').textContent = d.title;
+  document.getElementById('modal-report-date').textContent = d.date;
+  document.getElementById('modal-report-tag').textContent = d.tag;
+  const aiEl = document.getElementById('modal-report-ai');
+  aiEl.textContent = d.ai;
+  aiEl.className = 'ai-chip ' + d.aiClass;
+  document.getElementById('modal-report-body').textContent = d.body;
+  document.getElementById('modal-report-learning').textContent = d.learning;
+  document.getElementById('modal-ai-hint').innerHTML = d.hint;
+  document.getElementById('comment-area').value = '';
+  document.getElementById('modal-report').classList.add('show');
+}
+
+function closeModal(type) {
+  if(type === 'sato')   { document.getElementById('modal-sato').classList.remove('show'); return; }
+  if(type === 'praise') { document.getElementById('modal-praise').classList.remove('show'); return; }
+  document.getElementById('modal-report').classList.remove('show');
+}
+
+function insertComment(text) {
+  const area = document.getElementById('comment-area');
+  area.value = (area.value ? area.value + '\n' : '') + text;
+  area.focus();
+}
+
+function sendComment() {
+  const val = document.getElementById('comment-area').value.trim();
+  if(!val){ toast('コメントを入力してください'); return; }
+  closeModal('report');
+  toast('コメントを送りました ✉️');
+}
+
+// バーアニメーション
+window.addEventListener('load', () => {
+  document.querySelectorAll('.policy-bar,.bar-fill,.goal-bar').forEach(b => {
+    const w = b.style.width;
+    b.style.width = '0';
+    requestAnimationFrame(() => {
+      setTimeout(() => { b.style.width = w; }, 150);
+    });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Hoshin — 浸透ダッシュボード</title>
+<style>:root{--ink:#1e1c18;--ink-2:#4a4740;--ink-3:#8a877e;--bg:#f4f2ed;--surface:#fff;--border:#e2dfd6;--owner:#2d5a3d;--owner-md:#1a8060;--owner-lt:#e4f3ed;--red:#b83232;--red-lt:#fdeaea;--gold:#8a6a1a;--gold-lt:#fdf6e3;--radius:10px;--shadow:0 1px 3px rgba(0,0,0,.06)}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}body{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6}
+.nav{background:var(--owner);position:sticky;top:0;z-index:100}.nav-inner{max-width:1080px;margin:0 auto;padding:0 20px;height:52px;display:flex;align-items:center;gap:8px}.nav-logo{font-size:17px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;margin-right:12px}.nav-link{padding:5px 10px;border-radius:6px;font-size:12px;color:rgba(255,255,255,.7);cursor:pointer}.nav-link.active{background:rgba(255,255,255,.18);color:#fff;font-weight:500}.nav-right{margin-left:auto}.nav-avatar{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.page{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);cursor:pointer;transition:border-color .15s}
+.kpi-card:hover{border-color:var(--owner-md)}
+.kpi-label{font-size:11px;color:var(--ink-3);margin-bottom:6px}.kpi-val{font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1;margin-bottom:5px}.kpi-sub{font-size:11px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.card-head{padding:14px 16px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.card-title{font-size:13px;font-weight:600}
+.card-link{font-size:12px;color:var(--owner-md);cursor:pointer}
+.policy-item{padding:0 16px 10px}
+.policy-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.policy-name{font-size:13px;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+.policy-pct{font-size:13px;font-weight:600}
+.bar-wrap{height:8px;background:var(--bg);border-radius:4px;overflow:hidden}
+.bar{height:100%;border-radius:4px;transition:width .4s}
+.badge{display:inline-flex;font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500}
+.bg{background:var(--owner-lt);color:var(--owner)}.bm{background:var(--gold-lt);color:var(--gold)}.br{background:var(--red-lt);color:var(--red);border:1px solid #e5aaaa}
+.member-row{display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px}
+.member-row:last-child{border-bottom:none}.member-row:hover{background:var(--bg)}
+.av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.av-g{background:var(--owner-lt);color:var(--owner)}.av-a{background:#fef3e2;color:#b06a10}.av-p{background:#eeedfe;color:#3d3591}
+.mini-bar{flex:1;height:5px;background:var(--bg);border-radius:3px;overflow:hidden;max-width:80px}
+.mini-fill{height:100%;border-radius:3px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;font-size:13px;padding:10px 20px;border-radius:24px;box-shadow:0 4px 16px rgba(0,0,0,.18);transition:transform .3s;white-space:nowrap;pointer-events:none;z-index:999}.toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:700px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}}
+</style></head><body>
+<nav class="nav"><div class="nav-inner">
+  <div class="nav-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Hoshin</div>
+  <div class="nav-link" onclick="toast('ホームへ')">ホーム</div>
+  <div class="nav-link" onclick="toast('指針書へ')">指針書</div>
+  <div class="nav-link active">レポート</div>
+  <div class="nav-right"><div class="nav-avatar">山</div></div>
+</div></nav>
+<div class="page">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+    <div><h1 style="font-size:20px;font-weight:700;margin-bottom:2px">会社全体の状況を見る</h1><p style="font-size:12px;color:var(--ink-3)">2024年8月　全社員42名・日報163件を分析</p></div>
+    <div style="display:flex;gap:6px">
+      <select style="font-size:12px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface)"><option>今月</option><option>先月</option><option>3か月</option></select>
+      <select style="font-size:12px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface)"><option>全社</option><option>営業部</option><option>開発部</option></select>
+    </div>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi-card" onclick="toast('日報提出率の詳細')"><div class="kpi-label">日報の提出率</div><div class="kpi-val" style="color:var(--owner)">78%</div><div class="kpi-sub" style="color:var(--owner-md)">↑ 先月より +3%</div></div>
+    <div class="kpi-card" onclick="toast('指針伝達率の詳細')"><div class="kpi-label">指針が伝わっている度合い</div><div class="kpi-val">62%</div><div class="kpi-sub" style="color:var(--ink-3)">目標 80%</div></div>
+    <div class="kpi-card" onclick="toast('未コメント日報一覧')"><div class="kpi-label">未コメントの日報</div><div class="kpi-val" style="color:var(--red)">12件</div><div class="kpi-sub" style="color:var(--red)">返信が必要です</div></div>
+    <div class="kpi-card" onclick="toast('目標の詳細')"><div class="kpi-label">会社目標の進み</div><div class="kpi-val">69%</div><div class="kpi-sub" style="color:var(--ink-3)">3目標の平均</div></div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-head"><span class="card-title">指針ごとの伝わり具合（今月）</span><a class="card-link" onclick="toast('詳細レポートへ')">詳細</a></div>
+      <div class="policy-item"><div class="policy-meta"><span class="policy-name">お客様を一番に考える <span class="badge bg">良好</span></span><span class="policy-pct" style="color:var(--owner)">84%</span></div><div class="bar-wrap"><div class="bar" style="width:84%;background:var(--owner-md)"></div></div></div>
+      <div class="policy-item"><div class="policy-meta"><span class="policy-name">誠実に行動する <span class="badge bm">普通</span></span><span class="policy-pct">64%</span></div><div class="bar-wrap"><div class="bar" style="width:64%;background:#d4a847"></div></div></div>
+      <div class="policy-item"><div class="policy-meta"><span class="policy-name">チームで助け合う <span class="badge bm">普通</span></span><span class="policy-pct">48%</span></div><div class="bar-wrap"><div class="bar" style="width:48%;background:#d4a847"></div></div></div>
+      <div class="policy-item" style="padding-bottom:16px"><div class="policy-meta"><span class="policy-name" style="color:var(--red)">挑戦することを楽しむ <span class="badge br">要対応</span></span><span class="policy-pct" style="color:var(--red)">12%</span></div><div class="bar-wrap"><div class="bar" style="width:12%;background:var(--red)"></div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="card-title">チームごとの状況</span></div>
+      <div class="member-row" onclick="toast('営業部の詳細')"><div class="av av-g">営</div><div style="flex:1"><div style="font-size:13px;font-weight:500">営業チーム</div><div class="mini-bar" style="margin-top:4px"><div class="mini-fill" style="width:84%;background:var(--owner-md)"></div></div></div><span style="font-size:14px;font-weight:600;color:var(--owner)">84%</span></div>
+      <div class="member-row" onclick="toast('開発部の詳細')"><div class="av av-p">開</div><div style="flex:1"><div style="font-size:13px;font-weight:500">開発チーム</div><div class="mini-bar" style="margin-top:4px"><div class="mini-fill" style="width:64%;background:#d4a847"></div></div></div><span style="font-size:14px;font-weight:600;color:var(--gold-lt);;color:#8a6a1a">64%</span></div>
+      <div class="member-row" onclick="toast('管理部の詳細')"><div class="av" style="background:#fdeaea;color:var(--red)">管</div><div style="flex:1"><div style="font-size:13px;font-weight:500">管理チーム</div><div class="mini-bar" style="margin-top:4px"><div class="mini-fill" style="width:42%;background:var(--red)"></div></div></div><span style="font-size:14px;font-weight:600;color:var(--red)">42%</span></div>
+      <div class="member-row" onclick="toast('人事部の詳細')"><div class="av av-a">人</div><div style="flex:1"><div style="font-size:13px;font-weight:500">人事チーム</div><div class="mini-bar" style="margin-top:4px"><div class="mini-fill" style="width:54%;background:#d4a847"></div></div></div><span style="font-size:14px;font-weight:600;color:#8a6a1a">54%</span></div>
+    </div>
+  </div>
+  <!-- AIサマリー -->
+  <div class="card">
+    <div style="padding:16px">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px">
+        <div style="width:32px;height:32px;border-radius:50%;background:#3d3591;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px">✦</div>
+        <div><div style="font-size:13px;font-weight:600">月次 AI サマリー</div><div style="font-size:11px;color:var(--ink-3)">日報163件を分析</div></div>
+        <button style="margin-left:auto;padding:7px 14px;background:#eeedfe;border:1px solid #c8c4f4;color:#3d3591;font-size:12px;font-weight:500;border-radius:6px;cursor:pointer;font-family:inherit" onclick="toast('月次レポート全文を表示します')">全文を読む →</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0;border-top:1px solid var(--border)">
+        <div style="display:flex;gap:8px;font-size:12px;color:var(--ink-2);line-height:1.65;padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-size:15px;flex-shrink:0">✅</span>「お客様第一」の体現率が過去最高（84%）。営業チームが牽引しています。</div>
+        <div style="display:flex;gap:8px;font-size:12px;color:var(--ink-2);line-height:1.65;padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-size:15px;flex-shrink:0">⚠️</span>「挑戦する」指針は12%と最低水準。全部門でほぼ言及がありません。</div>
+        <div style="display:flex;gap:8px;font-size:12px;color:var(--ink-2);line-height:1.65;padding:8px 0"><span style="font-size:15px;flex-shrink:0">💡</span>田中一郎さんの行動事例を全社で横展開することを推奨します。</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="t"></div>
+<script>let tt;function toast(m){const e=document.getElementById('t');e.textContent=m;e.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),2200)}</script>
+</body></html>

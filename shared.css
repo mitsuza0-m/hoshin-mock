@@ -1,0 +1,113 @@
+/* =====================================================
+   Hoshin — 共通スタイル
+   ===================================================== */
+:root {
+  --ink:        #1e1c18;
+  --ink-2:      #4a4740;
+  --ink-3:      #8a877e;
+  --ink-4:      #c4c1b8;
+  --bg:         #f4f2ed;
+  --surface:    #ffffff;
+  --border:     #e2dfd6;
+
+  /* Owner: 緑 */
+  --owner:      #2d5a3d;
+  --owner-md:   #1a8060;
+  --owner-lt:   #e4f3ed;
+
+  /* Manager: 青緑 */
+  --teal:       #0e5c46;
+  --teal-md:    #1a8060;
+  --teal-lt:    #e4f3ed;
+
+  /* Member: アンバー */
+  --amber:      #b06a10;
+  --amber-md:   #c07812;
+  --amber-lt:   #fef3e2;
+
+  /* 状態 */
+  --green:      #2d5a3d;
+  --green-md:   #4a8c60;
+  --green-lt:   #e8f1eb;
+  --red:        #b83232;
+  --red-lt:     #fdeaea;
+  --orange:     #c05010;
+  --orange-lt:  #fdeee6;
+  --gold:       #8a6a1a;
+  --gold-lt:    #fdf6e3;
+  --purple:     #3d3591;
+  --purple-lt:  #eeedfe;
+
+  --radius:     10px;
+  --radius-sm:  6px;
+  --shadow:     0 1px 3px rgba(0,0,0,.06);
+  --shadow-md:  0 2px 8px rgba(0,0,0,.09);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── 共通トースト ── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--ink); color: #fff;
+  font-size: 13px; padding: 10px 20px;
+  border-radius: 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.18);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+  white-space: nowrap; pointer-events: none; z-index: 999;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── 共通カード ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* ── バッジ ── */
+.badge {
+  display: inline-flex; align-items: center;
+  font-size: 11px; padding: 2px 8px;
+  border-radius: 20px; font-weight: 500;
+}
+.badge-green  { background: var(--green-lt);  color: var(--green); }
+.badge-amber  { background: var(--amber-lt);  color: var(--amber); }
+.badge-red    { background: var(--red-lt);    color: var(--red); }
+.badge-gold   { background: var(--gold-lt);   color: var(--gold); }
+.badge-purple { background: var(--purple-lt); color: var(--purple); }
+.badge-gray   { background: var(--bg);        color: var(--ink-3); }
+
+/* ── ページナビインデックス ── */
+.page-index {
+  position: fixed; bottom: 20px; right: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 10px 14px;
+  z-index: 200;
+  font-size: 12px;
+}
+.page-index-title {
+  font-size: 11px; font-weight: 600;
+  color: var(--ink-3); margin-bottom: 7px;
+}
+.page-index a {
+  display: block; color: var(--ink-2);
+  text-decoration: none; padding: 3px 0;
+  transition: color .15s;
+}
+.page-index a:hover { color: var(--owner); }
+.page-index a.active { color: var(--owner); font-weight: 600; }
